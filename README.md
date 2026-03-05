@@ -55,6 +55,78 @@ cp .env.example .env.local
 npm run dev
 ```
 
+## Vercel Node API Setup (Team Runbook)
+
+Use this when you want to initialize the backend pipeline end to end on Vercel.
+
+### 1) Create a basic API route
+
+```bash
+mkdir -p api
+cat > api/hello.js <<'EOF'
+module.exports = (req, res) => {
+  res.status(200).json({ ok: true, message: "hello world" });
+};
+EOF
+```
+
+### 2) Add a minimal `package.json`
+
+Create `package.json` in the repo root:
+
+```json
+{
+  "name": "huddle",
+  "private": true,
+  "type": "commonjs",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^48.0.5"
+  }
+}
+```
+
+### 3) Install and test locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000/api/hello` and confirm:
+
+```json
+{"ok":true,"message":"hello world"}
+```
+
+### 4) Push to GitHub
+
+```bash
+git add .
+git commit -m "Scaffold Vercel Node API hello world"
+git push origin main
+```
+
+### 5) Deploy in Vercel
+
+1. Vercel Dashboard -> `Add New Project`
+2. Import this GitHub repo
+3. Framework Preset: `Other`
+4. Root Directory: repo root
+5. Click `Deploy`
+
+### 6) Verify deployed endpoint
+
+Open:
+
+`https://<your-vercel-domain>/api/hello`
+
+If this works, the backend deployment pipeline is wired correctly.
+
 ## Project Structure
 
 ```
