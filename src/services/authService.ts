@@ -4,32 +4,46 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  type User,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import type { AuthStateCallback, Unsubscribe, UserProfile } from '../types';
 
-// Sign up a new user
-export const signUp = async (email, password) => {
+/**
+ * Register a new user and create their Firestore profile document.
+ */
+export const signUp = async (email: string, password: string): Promise<User> => {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;
 
-  // Create user doc in Firestore on first sign-up
-  await setDoc(doc(db, 'users', user.uid), {
-    email: user.email,
+  const profile: UserProfile = {
+    email: user.email ?? email,
     createdAt: new Date(),
-    preferences: {}, // to be filled in later
-  });
+    preferences: {},
+  };
+
+  await setDoc(doc(db, 'users', user.uid), profile);
 
   return user;
 };
 
-// Sign in an existing user
-export const signIn = async (email, password) => {
+/**
+ * Sign in an existing user with email and password.
+ */
+export const signIn = async (email: string, password: string): Promise<User> => {
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
   return userCredential.user;
 };
 
-// Sign out
-export const logOut = () => signOut(auth);
+/**
+ * Sign the current user out.
+ */
+export const logOut = (): Promise<void> => signOut(auth);
 
-// Listen for auth state changes (useful for protecting routes)
-export const onAuthChange = (callback) => onAuthStateChanged(auth, callback);
+/**
+ * Subscribe to authentication state changes.
+ *
+ * @returns An unsubscribe function to stop listening.
+ */
+export const onAuthChange = (callback: AuthStateCallback): Unsubscribe =>
+  onAuthStateChanged(auth, callback);

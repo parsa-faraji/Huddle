@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebase';
 import { logOut, onAuthChange } from '../services/authService';
+import type { ProfileResponse } from '../types';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
 
 export default function Dashboard() {
   const [profileData, setProfileData] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,33 +21,43 @@ export default function Dashboard() {
   }, [navigate]);
 
   const fetchProfile = async () => {
-    try {
-      // 1. Check if user is logged in
-      if (!auth.currentUser) {
-        setProfileData("No user logged in!");
-        return;
-      }
+    if (!auth.currentUser) {
+      setProfileData('No user logged in!');
+      return;
+    }
 
-      // 2. Grab the secret ID token from Firebase Auth
+    setLoading(true);
+    try {
       const token = await auth.currentUser.getIdToken();
 
-      // 3. Make the API call to your Node.js backend
-      const res = await fetch('http://localhost:5000/profile', {
+      const res = await fetch(`${API_BASE_URL}/profile`, {
         headers: {
-          // 4. Send the token in the Authorization header
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // 5. Read the response
       if (res.ok) {
-        const data = await res.json();
-        setProfileData(data.message); // Will set "Hello user [UID]"
+        const data: ProfileResponse = await res.json();
+        setProfileData(data.message);
       } else {
-        setProfileData("Error fetching profile: " + res.statusText);
+        const errorText = await res.text();
+        setProfileData(`Error fetching profile: ${res.status} ${errorText}`);
       }
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Unknown error';
+      console.error('Failed to fetch profile', error);
+      setProfileData(`Network error: ${message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogOut = async () => {
+    try {
+      await logOut();
     } catch (error) {
-      console.error("Failed to fetch profile", error);
+      console.error('Failed to log out', error);
     }
   };
 
@@ -51,9 +65,11 @@ export default function Dashboard() {
     <div>
       <h1>Dashboard</h1>
       <p>Welcome to your protected dashboard!</p>
-      
-      <button onClick={fetchProfile}>Fetch My Profile from Backend</button>
-      
+
+      <button onClick={fetchProfile} disabled={loading}>
+        {loading ? 'Loading...' : 'Fetch My Profile from Backend'}
+      </button>
+
       {profileData && (
         <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#eee' }}>
           <strong>Backend Response:</strong> {profileData}
@@ -61,7 +77,7 @@ export default function Dashboard() {
       )}
 
       <br /><br />
-      <button onClick={logOut}>Log Out</button>
+      <button onClick={handleLogOut}>Log Out</button>
     </div>
   );
 }
