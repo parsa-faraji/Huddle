@@ -1,5 +1,10 @@
 # Huddle
 
+[![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com)
+[![License: Educational](https://img.shields.io/badge/License-Educational-blue?style=flat-square)](LICENSE)
+
 A campus study spot discovery, rating, and group matching app for students.
 
 ## About
