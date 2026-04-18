@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "installCommand": "npm install && (cd Backend && npm install)",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/api", "destination": "/api" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
