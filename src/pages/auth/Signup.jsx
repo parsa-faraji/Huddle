@@ -1,22 +1,39 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { friendlyAuthError } from "../../services/authErrors";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setError("");
     if (!form.name || !form.email || !form.password || !form.confirm) {
-      alert("Please fill in all fields!");
+      setError("Please fill in all fields.");
       return;
     }
     if (form.password !== form.confirm) {
-      alert("Passwords don't match!");
+      setError("Passwords don't match.");
       return;
     }
-    navigate("/study-spots");
+    setBusy(true);
+    try {
+      await signUp(form.name.trim(), form.email.trim(), form.password);
+      navigate("/study-spots");
+    } catch (e) {
+      setError(friendlyAuthError(e));
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -69,12 +86,17 @@ export default function Signup() {
             </div>
           ))}
 
+          {error && (
+            <p className="text-xs font-semibold text-red-700 bg-red-100 rounded px-3 py-2">{error}</p>
+          )}
+
           <button
             onClick={handleSubmit}
-            className="mt-4 py-3 rounded-full font-bold text-sm hover:scale-95 transition-transform"
-            style={{ backgroundColor: "#1C1008", color: "#F9C84A", cursor: "pointer" }}
+            disabled={busy}
+            className="mt-4 py-3 rounded-full font-bold text-sm hover:scale-95 transition-transform disabled:opacity-60"
+            style={{ backgroundColor: "#1C1008", color: "#F9C84A", cursor: busy ? "wait" : "pointer" }}
           >
-            Create account
+            {busy ? "Creating..." : "Create account"}
           </button>
         </div>
       </div>
