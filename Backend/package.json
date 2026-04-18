@@ -1,11 +1,12 @@
 {
-  "name": "backend",
+  "name": "huddle-backend",
   "version": "1.0.0",
-  "description": "Welcome to the backend setup! This guide is designed to help your team set up a solid foundation for the backend using **Node.js, Express, and Firebase**.",
-  "main": "firebase.js",
+  "description": "Huddle backend API — Node.js + Express + Firebase Admin SDK",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
