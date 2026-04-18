@@ -1,49 +1,90 @@
-import { createContext, useContext, useState } from "react";
-import { studySessions as initialSessions } from "../data/studySessions";
-import { studyGroups as initialGroups } from "../data/studyGroups";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthContext";
+import { subscribeSpots } from "../services/spots";
+import {
+  subscribeGroups,
+  createGroup as svcCreateGroup,
+  joinGroup as svcJoinGroup,
+  leaveGroup as svcLeaveGroup,
+} from "../services/groups";
+import { subscribeUserDoc, joinSpot as svcJoinSpot, leaveSpot as svcLeaveSpot } from "../services/users";
+import { subscribeUserSessions, submitRating as svcSubmitRating } from "../services/ratings";
 
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  const [sessions, setSessions] = useState(initialSessions);
-  const [groups, setGroups] = useState(initialGroups);
-  const [joinedGroups, setJoinedGroups] = useState([]);
-  const [joinedSpots, setJoinedSpots] = useState([]);
+  const { user } = useAuth();
+  const [spots, setSpots] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [userDoc, setUserDoc] = useState(null);
 
-  const joinGroup = (group) => {
-    setJoinedGroups((prev) => {
-      if (prev.find((g) => g.id === group.id)) return prev;
-      return [group, ...prev];
-    });
+  useEffect(() => subscribeSpots(setSpots), []);
+  useEffect(() => subscribeGroups(setGroups), []);
+
+  useEffect(() => {
+    if (!user) {
+      setUserDoc(null);
+      setSessions([]);
+      return;
+    }
+    const unsubUser = subscribeUserDoc(user.uid, setUserDoc);
+    const unsubSessions = subscribeUserSessions(user.uid, setSessions);
+    return () => {
+      unsubUser();
+      unsubSessions();
+    };
+  }, [user]);
+
+  const joinedGroupIds = userDoc?.joinedGroupIds ?? [];
+  const joinedSpotIds = userDoc?.joinedSpotIds ?? [];
+  const joinedGroups = groups.filter((g) => joinedGroupIds.includes(g.id));
+  const joinedSpots = spots.filter((s) => joinedSpotIds.includes(s.id));
+
+  const joinGroup = async (group) => {
+    if (!user) return;
+    await svcJoinGroup(group.id, user.uid, user.displayName || "");
   };
 
-  const joinSpot = (spot) => {
-    setJoinedSpots((prev) => {
-      if (prev.find((s) => s.id === spot.id)) return prev;
-      return [spot, ...prev];
-    });
+  const leaveGroup = async (group) => {
+    if (!user) return;
+    await svcLeaveGroup(group.id, user.uid, user.displayName || "");
   };
 
-  const addGroup = (group) => {
-    const nextId = groups.length ? Math.max(...groups.map((g) => g.id)) + 1 : 1;
-    const newGroup = { id: nextId, ...group };
-    setGroups((prev) => [newGroup, ...prev]);
-    return newGroup;
+  const joinSpot = async (spot) => {
+    if (!user) return;
+    await svcJoinSpot(user.uid, spot.id);
   };
 
-  const addSession = (session) => {
-    setSessions((prev) => [{ id: prev.length + 1, ...session }, ...prev]);
+  const leaveSpot = async (spot) => {
+    if (!user) return;
+    await svcLeaveSpot(user.uid, spot.id);
+  };
+
+  const addGroup = async (data) => {
+    if (!user) throw new Error("Not signed in");
+    return svcCreateGroup(data, user.uid, user.displayName || "");
+  };
+
+  const addSession = async (session) => {
+    if (!user) return;
+    const { spotId, spot, ...rest } = session;
+    if (!spotId) return;
+    await svcSubmitRating(spotId, spot, user.uid, rest);
   };
 
   return (
     <AppContext.Provider
       value={{
-        sessions,
+        spots,
         groups,
+        sessions,
         joinedGroups,
         joinedSpots,
         joinGroup,
+        leaveGroup,
         joinSpot,
+        leaveSpot,
         addGroup,
         addSession,
       }}

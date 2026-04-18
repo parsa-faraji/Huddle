@@ -16,11 +16,17 @@ service cloud.firestore {
       allow update, delete: if isOwner(userId);
     }
 
-    // Study spots: any authenticated user can read; writes restricted
+    // Study spots: any authenticated user can read; creator manages metadata,
+    // any signed-in user may update only the rating aggregates (ratingSum/ratingCount)
     match /spots/{spotId} {
       allow read: if isSignedIn();
       allow create: if isSignedIn();
-      allow update, delete: if isSignedIn()
+      allow update: if isSignedIn() && (
+        (resource.data.createdBy is string && resource.data.createdBy == request.auth.uid)
+        || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ratingSum', 'ratingCount'])
+      );
+      allow delete: if isSignedIn()
+        && resource.data.createdBy is string
         && resource.data.createdBy == request.auth.uid;
     }
 
@@ -33,11 +39,17 @@ service cloud.firestore {
         && resource.data.userId == request.auth.uid;
     }
 
-    // Study groups: authenticated users can read; owner manages
+    // Study groups: authenticated users can read; owner manages metadata,
+    // any signed-in user may update only the membership lists (memberIds/members) to join/leave
     match /groups/{groupId} {
       allow read: if isSignedIn();
       allow create: if isSignedIn();
-      allow update, delete: if isSignedIn()
+      allow update: if isSignedIn() && (
+        (resource.data.ownerId is string && resource.data.ownerId == request.auth.uid)
+        || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberIds', 'members'])
+      );
+      allow delete: if isSignedIn()
+        && resource.data.ownerId is string
         && resource.data.ownerId == request.auth.uid;
     }
 

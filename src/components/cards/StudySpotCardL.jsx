@@ -31,9 +31,18 @@ const crowdBadgeColor = (level) => (level === "Low" ? "green" : level === "Mediu
 const openBadgeColor = (isOpen) => (isOpen ? "green" : "red");
 const ratingBadgeColor = (rating) => (rating >= 4.5 ? "green" : rating >= 4.0 ? "orange" : "red");
 
+function displayRating(data) {
+  if (data.ratingCount && data.ratingCount > 0) {
+    return (data.ratingSum / data.ratingCount).toFixed(1);
+  }
+  if (data.rating !== undefined) return Number(data.rating).toFixed(1);
+  return null;
+}
+
 export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onConfirmJoin }) {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const rating = displayRating(data);
 
   return (
     <>
@@ -75,10 +84,10 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
                 <Badge label={data.open ? "Open" : "Closed"} color={openBadgeColor(data.open)} />
               </div>
             )}
-            {data.rating !== undefined && (
+            {rating !== null && (
               <div className="flex flex-col items-center">
                 <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Rating</span>
-                <Badge label={`${data.rating}`} color={ratingBadgeColor(data.rating)} />
+                <Badge label={rating} color={ratingBadgeColor(Number(rating))} />
               </div>
             )}
           </div>

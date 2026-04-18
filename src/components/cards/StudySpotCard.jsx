@@ -34,8 +34,17 @@ const crowdBadgeColor = (level) =>
   level === "Low" || level === "Small" ? "green" : level === "Medium" ? "orange" : "red";
 const ratingBadgeColor = (rating) => (rating >= 4 ? "green" : rating >= 3.0 ? "orange" : "red");
 
+function displayRating(spot) {
+  if (spot.ratingCount && spot.ratingCount > 0) {
+    return (spot.ratingSum / spot.ratingCount).toFixed(1);
+  }
+  if (spot.rating !== undefined) return Number(spot.rating).toFixed(1);
+  return null;
+}
+
 export default function StudySpotCard({ spot }) {
   const navigate = useNavigate();
+  const rating = displayRating(spot);
 
   return (
     <div className="flex justify-center w-full">
@@ -73,10 +82,10 @@ export default function StudySpotCard({ spot }) {
               <Badge label={spot.open ? "Open" : "Closed"} color={spot.open ? "green" : "red"} />
             </div>
           )}
-          {spot.rating !== undefined && (
+          {rating !== null && (
             <div className="flex flex-col items-center">
               <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Rating</span>
-              <Badge label={`${spot.rating}`} color={ratingBadgeColor(spot.rating)} />
+              <Badge label={rating} color={ratingBadgeColor(Number(rating))} />
             </div>
           )}
         </div>

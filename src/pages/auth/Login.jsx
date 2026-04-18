@@ -1,18 +1,51 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { friendlyAuthError } from "../../services/authErrors";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { signIn, resetPassword } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
+    setInfo("");
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setError("");
+    setInfo("");
     if (!form.email || !form.password) {
-      alert("Please fill in all fields!");
+      setError("Please fill in all fields.");
       return;
     }
-    navigate("/study-spots");
+    setBusy(true);
+    try {
+      await signIn(form.email.trim(), form.password);
+      navigate("/study-spots");
+    } catch (e) {
+      setError(friendlyAuthError(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleForgot = async () => {
+    setError("");
+    setInfo("");
+    const email = form.email.trim() || window.prompt("Enter the email for password reset:");
+    if (!email) return;
+    try {
+      await resetPassword(email);
+      setInfo(`Password reset email sent to ${email}.`);
+    } catch (e) {
+      setError(friendlyAuthError(e));
+    }
   };
 
   return (
@@ -66,16 +99,27 @@ export default function Login() {
             style={{ backgroundColor: "#FDD878", color: "#B07A00" }}
           />
 
-          <p className="text-right text-xs font-bold text-black cursor-pointer hover:underline">
+          <p
+            onClick={handleForgot}
+            className="text-right text-xs font-bold text-black cursor-pointer hover:underline"
+          >
             Forgot Password
           </p>
 
+          {error && (
+            <p className="text-xs font-semibold text-red-700 bg-red-100 rounded px-3 py-2">{error}</p>
+          )}
+          {info && (
+            <p className="text-xs font-semibold text-green-800 bg-green-100 rounded px-3 py-2">{info}</p>
+          )}
+
           <button
             onClick={handleSubmit}
-            className="mt-4 py-3 rounded-full font-bold text-sm transition-transform"
-            style={{ backgroundColor: "#1C1008", color: "#F9C84A", cursor: "pointer" }}
+            disabled={busy}
+            className="mt-4 py-3 rounded-full font-bold text-sm transition-transform disabled:opacity-60"
+            style={{ backgroundColor: "#1C1008", color: "#F9C84A", cursor: busy ? "wait" : "pointer" }}
           >
-            Sign in
+            {busy ? "Signing in..." : "Sign in"}
           </button>
         </div>
       </div>

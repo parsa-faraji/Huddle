@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
 
 function GroupCard({ group }) {
   const navigate = useNavigate();
@@ -66,6 +67,13 @@ function JoinedSpotCard({ spot }) {
 
 export default function InsightsPage() {
   const { joinedGroups, joinedSpots, sessions } = useApp();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
@@ -143,6 +151,22 @@ export default function InsightsPage() {
               ))
             )}
           </div>
+        </div>
+
+        {/* Account / Sign Out */}
+        <div className="w-full mt-10 mb-24 flex flex-col items-center gap-2">
+          {user?.email && (
+            <p className="text-xs text-[#5C4033]" style={{ fontFamily: "'Jost', sans-serif" }}>
+              Signed in as {user.email}
+            </p>
+          )}
+          <button
+            onClick={handleSignOut}
+            className="px-6 py-2 rounded-full bg-sky-950 text-white font-bold text-sm cursor-pointer hover:bg-sky-900"
+            style={{ fontFamily: "'Jost', sans-serif" }}
+          >
+            Sign Out
+          </button>
         </div>
       </div>
     </div>
