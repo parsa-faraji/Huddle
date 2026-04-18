@@ -6,15 +6,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// A protected route
+// All routes under /api for Vercel deployment
+app.get('/api', (req, res) => {
+  res.send('Backend is running!');
+});
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, message: 'Backend is healthy!' });
+});
+app.get('/api/profile', verifyToken, (req, res) => {
+  res.json({ message: `Hello user ${req.user.uid}` });
+});
+
+// Legacy root routes (local dev)
+app.get('/', (req, res) => res.send('Backend is running!'));
 app.get('/profile', verifyToken, (req, res) => {
   res.json({ message: `Hello user ${req.user.uid}` });
 });
 
-// Another public route just to test
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
-});
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+module.exports = app;

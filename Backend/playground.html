@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Huddle Backend – Course</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      background: #fafafa;
+      color: #1a1a1a;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .nav a {
+      color: #0066cc;
+      text-decoration: none;
+      padding: 0.35rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    .nav a:hover { background: #e8f0fe; }
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: none;
+    }
+    .page.active { display: block; }
+    .page h1 {
+      margin: 0 0 1rem 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .page h2 {
+      margin: 1.5rem 0 0.5rem 0;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #333;
+    }
+    .page p { margin: 0 0 0.75rem 0; color: #333; }
+    .page ul { margin: 0 0 1rem 0; padding-left: 1.5rem; color: #333; }
+    .page li { margin-bottom: 0.35rem; }
+    code {
+      background: #e8e8e8;
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    .card h3 { margin: 0 0 0.5rem 0; font-size: 1rem; }
+    .btn {
+      display: inline-block;
+      background: #0066cc;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      margin-right: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .btn:hover { background: #0052a3; }
+    .btn-secondary { background: #e5e5e5; color: #1a1a1a; }
+    .btn-secondary:hover { background: #d0d0d0; }
+    .tester {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    .tester label { display: block; margin-bottom: 0.25rem; font-size: 0.9rem; font-weight: 500; color: #444; }
+    .tester input, .tester select, .tester textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+    .tester textarea { min-height: 70px; font-family: monospace; font-size: 0.85rem; }
+    .response {
+      background: #f5f5f5;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 280px;
+      overflow: auto;
+      margin-top: 0.75rem;
+      color: #333;
+    }
+    .response.ok { border-left: 4px solid #0a0; }
+    .response.err { border-left: 4px solid #c00; }
+    .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .preset {
+      background: #e8f0fe;
+      color: #0066cc;
+      border: 1px solid #b3d4fc;
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .preset:hover { background: #d2e3fc; }
+    .pagination { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e5e5; display: flex; justify-content: space-between; }
+    .activity-num { font-size: 0.85rem; color: #0066cc; font-weight: 600; margin-bottom: 0.25rem; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#welcome">Welcome</a>
+      <a href="#lesson1">Lesson 1</a>
+      <a href="#lesson2">Lesson 2</a>
+      <a href="#lesson3">Lesson 3</a>
+      <a href="#activity1">Activity 1</a>
+      <a href="#activity2">Activity 2</a>
+      <a href="#activity3">Activity 3</a>
+      <a href="#next">What’s next</a>
+    </div>
+  </nav>
+
+  <section id="welcome" class="page active">
+    <h1>Welcome to the Huddle backend course</h1>
+    <p>You’re building the backend for Huddle—the app that helps students find study spots on campus, rate them, and form study groups. This course walks you through the ideas and lets you try the API as you go.</p>
+    <p>Each section is short. Use the links at the top to jump around. When you see an <strong>Activity</strong>, you’ll use the API tester on that page.</p>
+    <div class="pagination">
+      <span></span>
+      <a class="btn" href="#lesson1">Next: Lesson 1</a>
+    </div>
+  </section>
+
+  <section id="lesson1" class="page">
+    <h1>Lesson 1: What is the backend for?</h1>
+    <p>Huddle has a <strong>frontend</strong> (the app students see in the browser) and a <strong>backend</strong> (a server that talks to the database and does the heavy lifting).</p>
+    <ul>
+      <li>The frontend might say: “Give me all study spots” or “Save this rating.”</li>
+      <li>The backend receives that request, talks to Firebase (our database), and sends back data—like a list of spots or “saved.”</li>
+    </ul>
+    <p>We build <strong>endpoints</strong> (URLs like <code>/api/spots</code> or <code>/profile</code>). Each endpoint does one job. The frontend will call these when the app loads a map, when someone submits a rating, or when they view their profile.</p>
+    <div class="pagination">
+      <a class="btn btn-secondary" href="#welcome">Back</a>
+      <a class="btn" href="#lesson2">Next: Lesson 2</a>
+    </div>
+  </section>
+
+  <section id="lesson2" class="page">
+    <h1>Lesson 2: Requests and responses</h1>
+    <p>Every time the app needs something from the backend, it sends a <strong>request</strong>. The backend runs the code for that URL and sends back a <strong>response</strong> (usually JSON).</p>
+    <ul>
+      <li><strong>Request:</strong> method (GET, POST, etc.) + path (e.g. <code>/api/health</code>) + optional body (for POST/PATCH).</li>
+      <li><strong>Response:</strong> a status (200 = OK, 401 = not allowed, etc.) and data, e.g. <code>{"ok": true}</code> or <code>{"spots": [...]}</code>.</li>
+    </ul>
+    <p>In the Activities you’ll send requests from this page and see the responses. That’s the same flow the real app will use.</p>
+    <div class="pagination">
+      <a class="btn btn-secondary" href="#lesson1">Back</a>
+      <a class="btn" href="#lesson3">Next: Lesson 3</a>
+    </div>
+  </section>
+
+  <section id="lesson3" class="page">
+    <h1>Lesson 3: Methods and paths</h1>
+    <p><strong>GET</strong> = “give me data.” Examples: list of spots, one spot, health check, my profile.</p>
+    <p><strong>POST</strong> = “here’s new data.” Examples: create a spot, add a rating, create a group.</p>
+    <p><strong>PATCH</strong> = “update this.” Example: update my preferences.</p>
+    <p><strong>DELETE</strong> = “remove this.”</p>
+    <p>The <strong>path</strong> says which resource: <code>/</code> = home, <code>/api/health</code> = health check, <code>/profile</code> = my profile (needs login). Some routes need an <strong>auth token</strong> so the backend knows who’s making the request.</p>
+    <div class="pagination">
+      <a class="btn btn-secondary" href="#lesson2">Back</a>
+      <a class="btn" href="#activity1">Next: Activity 1</a>
+    </div>
+  </section>
+
+  <section id="activity1" class="page">
+    <h1>Activity 1: Is the server running?</h1>
+    <p>Before anything else, the backend has to be running. In a terminal, go to the <strong>Backend</strong> folder and run <code>npm start</code>. You should see “Server running on port 5000.”</p>
+    <p>Then use the tester below: click <strong>Server alive?</strong>, then <strong>Send</strong>. You should get “Backend is running!” in the response.</p>
+    <div class="tester">
+      <label>Quick presets</label>
+      <div class="presets">
+        <button type="button" class="preset" data-method="GET" data-url="/api">Server alive?</button>
+        <button type="button" class="preset" data-method="GET" data-url="/api/health">Health check</button>
+      </div>
+      <label>Backend URL</label>
+      <input type="text" id="baseUrl1" class="baseUrl-input">
+      <label>Method</label>
+      <select id="method1">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+      </select>
+      <label>Path</label>
+      <input type="text" id="path1" value="/api">
+      <button type="button" class="btn" id="send1">Send</button>
+      <button type="button" class="btn btn-secondary" id="clear1">Clear</button>
+      <div id="response1" class="response">Click Send to see the response.</div>
+    </div>
+    <div class="pagination">
+      <a class="btn btn-secondary" href="#lesson3">Back</a>
+      <a class="btn" href="#activity2">Next: Activity 2</a>
+    </div>
+  </section>
+
+  <section id="activity2" class="page">
+    <h1>Activity 2: Health check</h1>
+    <p>The backend has a <code>/api/health</code> endpoint that returns <code>{"ok": true, "message": "Backend is healthy!"}</code>. Use it to confirm the server is up and responding.</p>
+    <p>Click <strong>Health check</strong> in the presets, then <strong>Send</strong>. You should see that JSON in the response.</p>
+    <div class="tester">
+      <div class="presets">
+        <button type="button" class="preset" data-method="GET" data-url="/api" data-tester="2">Server alive?</button>
+        <button type="button" class="preset" data-method="GET" data-url="/api/health" data-tester="2">Health check</button>
+      </div>
+      <label>Backend URL</label>
+      <input type="text" id="baseUrl2" class="baseUrl-input">
+      <label>Method</label>
+      <select id="method2">
+        <option value="GET">GET</option>
+      </select>
+      <label>Path</label>
+      <input type="text" id="path2" value="/api/health">
+      <button type="button" class="btn" id="send2">Send</button>
+      <button type="button" class="btn btn-secondary" id="clear2">Clear</button>
+      <div id="response2" class="response">Click Send to see the response.</div>
+    </div>
+    <div class="pagination">
+      <a class="btn btn-secondary" href="#activity1">Back</a>
+      <a class="btn" href="#activity3">Next: Activity 3</a>
+    </div>
+  </section>
+
+  <section id="activity3" class="page">
+    <h1>Activity 3: Get my profile (protected route)</h1>
+    <p><code>/profile</code> returns “Hello user [your ID]” but only if the backend knows who you are. So the request must include an <strong>auth token</strong> (from Firebase when you’re signed in).</p>
+    <p>To get a token: sign in on the Huddle app, open DevTools → Network, trigger a request to the backend (e.g. “Fetch My Profile” on the dashboard), then copy the <code>Authorization</code> header value (the part after “Bearer ”). Paste it in the Auth token field below, click <strong>Get my profile</strong>, then Send.</p>
+    <div class="tester">
+      <div class="presets">
+        <button type="button" class="preset" data-method="GET" data-url="/api/profile" data-tester="3" data-needs-token>Get my profile</button>
+      </div>
+      <label>Backend URL</label>
+      <input type="text" id="baseUrl3" class="baseUrl-input">
+      <label>Auth token (paste the part after "Bearer ")</label>
+      <input type="text" id="token3" placeholder="Optional for this activity">
+      <label>Method</label>
+      <select id="method3"><option value="GET">GET</option></select>
+      <label>Path</label>
+      <input type="text" id="path3" value="/api/profile">
+      <button type="button" class="btn" id="send3">Send</button>
+      <button type="button" class="btn btn-secondary" id="clear3">Clear</button>
+      <div id="response3" class="response">Add token and click Send, or try without token to see 401.</div>
+    </div>
+    <div class="pagination">
+      <a class="btn btn-secondary" href="#activity2">Back</a>
+      <a class="btn" href="#next">Next: What’s next</a>
+    </div>
+  </section>
+
+  <section id="next" class="page">
+    <h1>What’s next</h1>
+    <p>You’ve seen how the backend responds to GET requests and how a protected route uses a token. Next steps:</p>
+    <ul>
+      <li>Open <strong>WORKSHOP.md</strong> in the Backend folder and do the sessions in order (add <code>/api/hello</code>, then spots, ratings, etc.).</li>
+      <li>As you add endpoints, come back here and add presets or use the tester with the new paths.</li>
+      <li>Pair up: one person drives, the other reads and suggests. Switch every 10–15 minutes.</li>
+    </ul>
+    <div class="pagination">
+      <a class="btn btn-secondary" href="#activity3">Back</a>
+      <span></span>
+    </div>
+  </section>
+
+  <script>
+    function getDefaultBackendUrl() {
+      if (typeof window !== 'undefined' && window.location && window.location.origin && window.location.protocol !== 'file:')
+        return window.location.origin + '/api';
+      return 'http://localhost:5000';
+    }
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function showPage(id) {
+      if (!id) return;
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+      var target = document.getElementById(id);
+      if (target) target.classList.add('active');
+      window.location.hash = id;
+    }
+
+    function setupTester(num) {
+      var base = document.getElementById('baseUrl' + num);
+      var method = document.getElementById('method' + num);
+      var path = document.getElementById('path' + num);
+      var sendBtn = document.getElementById('send' + num);
+      var clearBtn = document.getElementById('clear' + num);
+      var responseBox = document.getElementById('response' + num);
+      var tokenEl = num === 3 ? document.getElementById('token3') : null;
+      if (!base || !sendBtn || !responseBox) return;
+
+      sendBtn.addEventListener('click', function() {
+        var url = (base.value.replace(/\/$/, '') || 'http://localhost:5000') + (path.value.startsWith('/') ? path.value : '/' + path.value);
+        var headers = { 'Content-Type': 'application/json' };
+        if (tokenEl && tokenEl.value.trim()) headers['Authorization'] = 'Bearer ' + tokenEl.value.trim();
+        responseBox.textContent = 'Sending...';
+        responseBox.className = 'response';
+        fetch(url, { method: method.value, headers: headers })
+          .then(function(res) { return res.text().then(function(text) { return { ok: res.ok, status: res.status, statusText: res.statusText, text: text }; }); })
+          .then(function(result) {
+            var pretty = result.text;
+            try { pretty = JSON.stringify(JSON.parse(result.text), null, 2); } catch (_) {}
+            responseBox.className = 'response ' + (result.ok ? 'ok' : 'err');
+            responseBox.innerHTML = '<strong>Status: ' + result.status + ' ' + result.statusText + '</strong>\n' + escapeHtml(pretty);
+          })
+          .catch(function(err) {
+            responseBox.className = 'response err';
+            responseBox.textContent = 'Request failed: ' + err.message + '\n\nIs the backend running? (npm start in Backend folder)';
+          });
+      });
+
+      if (clearBtn) clearBtn.addEventListener('click', function() { responseBox.textContent = 'Click Send to see the response.'; responseBox.className = 'response'; });
+
+      var presets = document.querySelectorAll('#activity' + num + ' .preset');
+      for (var i = 0; i < presets.length; i++) {
+        (function(btn) {
+          btn.addEventListener('click', function() {
+            method.value = btn.getAttribute('data-method') || 'GET';
+            path.value = btn.getAttribute('data-url') || '/';
+            if (btn.getAttribute('data-needs-token') && tokenEl && !tokenEl.value.trim())
+              responseBox.textContent = 'Paste your token above, then click Send.';
+          });
+        })(presets[i]);
+      }
+    }
+
+    setupTester(1);
+    setupTester(2);
+    setupTester(3);
+
+    document.querySelectorAll('.nav a, .pagination a').forEach(function(a) {
+      var href = a.getAttribute('href');
+      if (href && href.indexOf('#') === 0) {
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          showPage(href.slice(1));
+        });
+      }
+    });
+
+    if (window.location.hash) showPage(window.location.hash.slice(1));
+    var defaultUrl = getDefaultBackendUrl();
+    document.querySelectorAll('.baseUrl-input').forEach(function(el) { el.value = defaultUrl; });
+  </script>
+</body>
+</html>

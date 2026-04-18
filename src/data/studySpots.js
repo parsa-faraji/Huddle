@@ -1,0 +1,50 @@
+export const studySpots = [
+  {
+    id: 1,
+    name: "Doe Library",
+    location: "On campus",
+    description: "Convenient, beautiful library",
+    distance: 0.3,
+    hours: "9AM - 9PM",
+    noiseLevel: "Silent",
+    outlets: true,
+    lighting: "Bright",
+    crowded: "Low",
+    roomType: "Library",
+    open: true,
+    rating: 4.7,
+    image: "/cat.webp"
+  },
+  {
+    id: 2,
+    name: "MLK Student Union",
+    location: "On campus",
+    description: "Collaborative study environment",
+    distance: 0.5,
+    hours: "10AM - 11PM",
+    noiseLevel: "Medium",
+    outlets: true,
+    lighting: "Medium",
+    crowded: "High",
+    roomType: "Student Center",
+    open: true,
+    rating: 4.1,
+    image: "/anothercat.jpg"
+  },
+  {
+    id: 3,
+    name: "Cafe Strada",
+    location: "Off campus",
+    description: "Great outdoor seating",
+    distance: 0.4,
+    hours: "8AM - 6PM",
+    noiseLevel: "Loud",
+    outlets: false,
+    lighting: "Dim",
+    crowded: "Medium",
+    roomType: "Cafe",
+    open: true,
+    rating: 3.2,
+    image: "/yetanothercat.jpg"
+  }
+];

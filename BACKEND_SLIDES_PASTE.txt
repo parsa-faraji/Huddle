@@ -1,0 +1,29 @@
+PASTE THIS INTO YOUR HUDDLE MID-SEMESTER PRESENTATION
+====================================================
+
+Find these slides and add the text below (or replace placeholder text).
+
+--- SLIDE: "Backend" (under PROGRESS 01) ---
+Add these bullets:
+
+• Express server + Firebase Admin; health & profile endpoints live
+• Auth (verifyToken) with Firebase ID tokens for protected routes
+• Backend Playground: in-repo course + 3 activities so the team can learn & test the API
+• Deployed to Vercel — everyone can do the activities on the live URL
+
+--- SLIDE: "BACKEND" (under CHALLENGES 02) ---
+Backend challenges (add or keep):
+
+• Learning Node, Express, Firebase Admin
+• Coordinating with frontend while building in parallel
+• Personalizing recommendations / determining available data
+
+--- SLIDE: "NEXT STEPS" (Backend section) ---
+Backend next steps:
+
+• Add study-spots API (GET/POST /api/spots, then ratings)
+• User preferences & groups endpoints
+• Keep using the Playground + WORKSHOP.md for pair programming
+
+---
+Tip: In Google Slides or PowerPoint, click the text box on each slide and paste or type the bullets above.

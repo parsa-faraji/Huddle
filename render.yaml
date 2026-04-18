@@ -1,0 +1,10 @@
+# Render: deploy Backend as a Web Service
+# In Render dashboard: New → Web Service → connect repo; set Root Directory to "Backend"
+# Add env vars: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY
+services:
+  - type: web
+    name: huddle-backend
+    runtime: node
+    rootDir: Backend
+    buildCommand: npm install
+    startCommand: npm start
