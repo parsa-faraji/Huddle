@@ -8,13 +8,14 @@ export default function BottomNav() {
     { to: "/study-spots", icon: "/map.svg" },
     { to: "/study-groups", icon: "/person.svg" },
     { to: "/insights", icon: "/insights.png" },
+    { to: "/profile", label: "Me" },
   ];
 
   return (
     <nav className="fixed bottom-4 left-0 w-full flex justify-center z-50">
       {/* Rounded yellow pill background */}
       <div
-        className="w-70 h-18 flex justify-around items-center shadow-lg px-4"
+        className="h-18 flex justify-around items-center shadow-lg px-4 gap-1"
         style={{ backgroundColor: "#FFE3A5E0", borderRadius: "50px" }}
       >
         {navItems.map((item) => {
@@ -34,11 +35,22 @@ export default function BottomNav() {
                 />
               )}
 
-              {/* Icon */}
-              <img
-                src={item.icon}
-                className={`w-10 h-10 z-10 ${isActive ? "brightness-110" : "brightness-90"}`}
-              />
+              {/* Icon or text label */}
+              {item.icon ? (
+                <img
+                  src={item.icon}
+                  className={`w-10 h-10 z-10 ${isActive ? "brightness-110" : "brightness-90"}`}
+                />
+              ) : (
+                <span
+                  className={`z-10 text-sm font-semibold text-black ${
+                    isActive ? "opacity-100" : "opacity-80"
+                  }`}
+                  style={{ fontFamily: "'Jost', sans-serif" }}
+                >
+                  {item.label}
+                </span>
+              )}
 
             </div>
           );

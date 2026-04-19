@@ -7,7 +7,12 @@ import {
   joinGroup as svcJoinGroup,
   leaveGroup as svcLeaveGroup,
 } from "../services/groups";
-import { subscribeUserDoc, joinSpot as svcJoinSpot, leaveSpot as svcLeaveSpot } from "../services/users";
+import {
+  subscribeUserDoc,
+  joinSpot as svcJoinSpot,
+  leaveSpot as svcLeaveSpot,
+  updatePreferences as svcUpdatePreferences,
+} from "../services/users";
 import { subscribeUserSessions, submitRating as svcSubmitRating } from "../services/ratings";
 
 const AppContext = createContext();
@@ -19,18 +24,24 @@ export function AppProvider({ children }) {
   const [sessions, setSessions] = useState([]);
   const [userDoc, setUserDoc] = useState(null);
 
-  useEffect(() => subscribeSpots(setSpots), []);
-  useEffect(() => subscribeGroups(setGroups), []);
-
+  // Gate Firestore subscriptions on auth state. Security rules require a
+  // signed-in user; subscribing before auth produces a permission-denied
+  // error and the listener never recovers when the user signs in later.
   useEffect(() => {
     if (!user) {
+      setSpots([]);
+      setGroups([]);
       setUserDoc(null);
       setSessions([]);
       return;
     }
+    const unsubSpots = subscribeSpots(setSpots);
+    const unsubGroups = subscribeGroups(setGroups);
     const unsubUser = subscribeUserDoc(user.uid, setUserDoc);
     const unsubSessions = subscribeUserSessions(user.uid, setSessions);
     return () => {
+      unsubSpots();
+      unsubGroups();
       unsubUser();
       unsubSessions();
     };
@@ -73,12 +84,18 @@ export function AppProvider({ children }) {
     await svcSubmitRating(spotId, spot, user.uid, rest);
   };
 
+  const updatePreferences = async (prefs) => {
+    if (!user) return;
+    await svcUpdatePreferences(user.uid, prefs);
+  };
+
   return (
     <AppContext.Provider
       value={{
         spots,
         groups,
         sessions,
+        userDoc,
         joinedGroups,
         joinedSpots,
         joinGroup,
@@ -87,6 +104,7 @@ export function AppProvider({ children }) {
         leaveSpot,
         addGroup,
         addSession,
+        updatePreferences,
       }}
     >
       {children}

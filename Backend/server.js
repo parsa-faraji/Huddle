@@ -84,9 +84,14 @@ app.use((err, _req, res, _next) => {
 });
 
 // ---------------------------------------------------------------------------
-// Start server
+// Start server only when run directly (not when required by a serverless
+// wrapper such as api/index.js on Vercel).
 // ---------------------------------------------------------------------------
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
-});
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
+  });
+}
+
+module.exports = app;

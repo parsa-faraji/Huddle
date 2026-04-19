@@ -27,7 +27,7 @@ const Badge = ({ label, color }) => {
 };
 
 const noiseBadgeColor = (level) =>
-  level === "Quiet" ? "green" : level === "Medium" ? "orange" : level === "Loud" ? "red" : "grey";
+  level === "Silent" || level === "Quiet" ? "green" : level === "Medium" ? "orange" : level === "Loud" ? "red" : "grey";
 const paceBadgeColor = (type) =>
   type === "Slow" ? "green" : type === "Medium" ? "orange" : type === "Fast" ? "red" : "grey";
 const groupBadgeColor = (type) =>
@@ -38,11 +38,15 @@ const crowdBadgeColor = (numPeople) => {
   return "red";
 };
 
-export default function ExpandedCard({ data, buttonText = "Join" }) {
+export default function ExpandedCard({ data, buttonText = "Join", onJoin }) {
   const { joinGroup } = useApp();
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleJoinClick = () => {
+    if (onJoin) {
+      onJoin();
+      return;
+    }
     joinGroup(data);      // Immediately add to joinedGroups
     setModalOpen(true);   // Then show modal
   };

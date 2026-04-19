@@ -1,22 +1,39 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { studySpots } from "../../data/studySpots";
 import StudySpotCardL from "../../components/cards/StudySpotCardL";
 import JoinModal from "../../components/modals/JoinModal";
 import { useApp } from "../../context/AppContext";
 
 export default function StudySpotInfo() {
   const { id } = useParams();
-  const spot = studySpots.find((s) => s.id === parseInt(id));
+  const { spots, userDoc, joinSpot, leaveSpot } = useApp();
+  const spot = spots.find((s) => s.id === id);
 
-  const { joinSpot } = useApp(); 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
 
+  if (spots.length === 0) return <p className="text-center mt-20">Loading…</p>;
   if (!spot) return <p className="text-center mt-20">Study Spot not found.</p>;
 
-  const handleConfirmJoin = () => {
-    if (joinSpot) joinSpot(spot);
-    setIsModalOpen(false);
+  const isJoined = (userDoc?.joinedSpotIds ?? []).includes(spot.id);
+
+  const handleJoin = async () => {
+    setBusy(true);
+    try {
+      await joinSpot(spot);
+      setIsModalOpen(true);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleLeave = async () => {
+    setBusy(true);
+    try {
+      await leaveSpot(spot);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -36,8 +53,8 @@ export default function StudySpotInfo() {
           <div className="mt-28 flex flex-col items-center w-88 gap-4 pb-24">
             <StudySpotCardL
               data={spot}
-              buttonText="Join"
-              onJoin={() => setIsModalOpen(true)}
+              buttonText={busy ? "…" : isJoined ? "Leave" : "Join"}
+              onJoin={isJoined ? handleLeave : handleJoin}
             />
           </div>
         </div>
@@ -45,10 +62,9 @@ export default function StudySpotInfo() {
 
       {isModalOpen && (
         <JoinModal
-          group={spot} 
+          group={spot}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onConfirm={handleConfirmJoin}
         />
       )}
     </>

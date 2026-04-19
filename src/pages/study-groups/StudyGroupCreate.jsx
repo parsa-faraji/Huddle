@@ -27,21 +27,38 @@ export default function StudyGroupCreate() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [createdGroup, setCreatedGroup] = useState(null);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setError("");
   }
 
   function handleCancel() {
     navigate("/study-groups");
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const newGroup = addGroup(formData);
-    setCreatedGroup(newGroup);
-    setModalOpen(true);
+    const required = ["name", "course", "description", "location", "availability", "meetingTime"];
+    const missing = required.filter((k) => !formData[k]?.trim?.());
+    if (missing.length > 0) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const newGroup = await addGroup(formData);
+      setCreatedGroup(newGroup);
+      setModalOpen(true);
+    } catch (err) {
+      setError(err?.message || "Could not create group.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   function closeModal() {
@@ -158,7 +175,7 @@ export default function StudyGroupCreate() {
                 className="h-10 px-3 rounded-lg outline outline-gray-300 font-['Jost']"
               >
                 <option value="">Select noise level</option>
-                <option value="Quiet">Quiet</option>
+                <option value="Silent">Silent</option>
                 <option value="Medium">Medium</option>
                 <option value="Loud">Loud</option>
               </select>
@@ -258,13 +275,27 @@ export default function StudyGroupCreate() {
               />
             </div>
 
+            {error && (
+              <p className="text-xs font-semibold text-red-700 bg-red-100 rounded px-3 py-2 font-['Jost']">
+                {error}
+              </p>
+            )}
+
             {/* Buttons */}
             <div className="flex flex-col gap-2 mt-4">
               <button
                 type="submit"
-                className="w-full h-12 bg-sky-950 text-white rounded-3xl cursor-pointer font-['Jost']"
+                disabled={busy}
+                className="w-full h-12 bg-sky-950 text-white rounded-3xl cursor-pointer font-['Jost'] disabled:opacity-60"
               >
-                Confirm
+                {busy ? "Creating…" : "Confirm"}
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="w-full h-10 bg-amber-100 text-black rounded-3xl cursor-pointer font-['Jost']"
+              >
+                Cancel
               </button>
             </div>
           </form>

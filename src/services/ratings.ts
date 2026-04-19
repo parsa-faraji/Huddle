@@ -2,7 +2,6 @@ import {
   collection,
   doc,
   onSnapshot,
-  orderBy,
   query,
   runTransaction,
   serverTimestamp,
@@ -20,6 +19,8 @@ export interface RatingFields {
   outlets?: string;
   lighting?: string;
   crowded?: string;
+  seating?: string;
+  wifi?: string;
   comments?: string;
 }
 
@@ -58,12 +59,16 @@ export async function submitRating(
 }
 
 export function subscribeUserSessions(uid: string, cb: (sessions: Session[]) => void) {
-  const q = query(
-    collection(db, 'ratings'),
-    where('userId', '==', uid),
-    orderBy('createdAt', 'desc'),
-  );
+  // NOTE: sorting by createdAt in memory instead of via Firestore orderBy
+  // avoids the need for a composite index (userId + createdAt).
+  const q = query(collection(db, 'ratings'), where('userId', '==', uid));
   return onSnapshot(q, (snap) => {
-    cb(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Session, 'id'>) })));
+    const rows = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Session, 'id'>) }));
+    rows.sort((a, b) => {
+      const at = (a as { createdAt?: { toMillis?: () => number } }).createdAt;
+      const bt = (b as { createdAt?: { toMillis?: () => number } }).createdAt;
+      return (bt?.toMillis?.() ?? 0) - (at?.toMillis?.() ?? 0);
+    });
+    cb(rows);
   });
 }

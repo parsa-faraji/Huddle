@@ -30,3 +30,7 @@ pnpm-debug.log*
 .firebase/
 firebase-debug.log
 .vercel
+
+# playwright
+test-results/
+playwright-report/

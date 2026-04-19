@@ -26,10 +26,10 @@ const Badge = ({ label, color }) => {
 };
 
 // Badge helpers
-const noiseBadgeColor = (level) => (level === "Silent" ? "green" : level === "Moderate" ? "orange" : "red");
+const noiseBadgeColor = (level) => (level === "Silent" ? "green" : level === "Medium" ? "orange" : level === "Loud" ? "red" : "grey");
 const crowdBadgeColor = (level) => (level === "Low" ? "green" : level === "Medium" ? "orange" : "red");
 const openBadgeColor = (isOpen) => (isOpen ? "green" : "red");
-const ratingBadgeColor = (rating) => (rating >= 4.5 ? "green" : rating >= 4.0 ? "orange" : "red");
+const ratingBadgeColor = (rating) => (rating >= 4 ? "green" : rating >= 3 ? "orange" : "red");
 
 function displayRating(data) {
   if (data.ratingCount && data.ratingCount > 0) {

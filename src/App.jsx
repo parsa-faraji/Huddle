@@ -14,6 +14,7 @@ import StudyGroupDiscovery from "./pages/study-groups/StudyGroupDiscovery";
 import StudyGroupInfo from "./pages/study-groups/StudyGroupInfo";
 import StudyGroupCreate from "./pages/study-groups/StudyGroupCreate";
 import Insights from "./pages/Insights";
+import Profile from "./pages/Profile";
 
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
@@ -42,6 +43,7 @@ function App() {
           <Route path="/study-groups/:id" element={<StudyGroupInfo />} />
           <Route path="/study-groups/create" element={<StudyGroupCreate />} />
           <Route path="/insights" element={<Insights />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
 

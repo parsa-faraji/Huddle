@@ -15,7 +15,7 @@ function GroupCard({ group }) {
       <p className="font-bold text-black text-base">
         {group.name ?? group.course}
       </p>
-      {group.description && (
+      {group.course && (
         <p className="text-xs text-[#5C4033]">Course: {group.course}</p>
       )}
       {group.meetingTime && (

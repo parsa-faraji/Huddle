@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useApp } from "../../context/AppContext";
 import { useParams, useNavigate } from "react-router-dom";
-import { studySpots } from "../../data/studySpots";
 import RateModal from "../../components/modals/RateModal";
 
 export default function StudySessionLog() {
-  const { addSession } = useApp(); 
+  const { spots, addSession } = useApp();
   const { id } = useParams(); // match the route param /study-spots/log/:id
   const navigate = useNavigate();
-  const spot = studySpots.find(s => s.id === parseInt(id));
+  const spot = spots.find((s) => s.id === id);
+  const spotsLoading = spots.length === 0;
 
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({
@@ -20,6 +20,8 @@ export default function StudySessionLog() {
     outlets: "",
     lighting: "",
     crowded: "",
+    seating: "",
+    wifi: "",
     comments: "",
     overallRating: 0, // added for page 2 rating
   });
@@ -44,6 +46,9 @@ export default function StudySessionLog() {
     setIsModalOpen(false);
     navigate("/study-spots/"); // go back to study spots discovery
   };
+
+  if (spotsLoading) return <p className="text-center mt-20">Loading…</p>;
+  if (!spot) return <p className="text-center mt-20">Study Spot not found.</p>;
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-white">
@@ -159,7 +164,9 @@ export default function StudySessionLog() {
               {/* Dropdown Ratings */}
               {[
                 { label: "Noise Level", name: "noiseLevel", options: ["Silent", "Medium", "Loud"] },
+                { label: "Seating", name: "seating", options: ["Plenty", "Limited", "Scarce"] },
                 { label: "Outlets", name: "outlets", options: ["Yes", "No"] },
+                { label: "WiFi", name: "wifi", options: ["Strong", "Spotty", "None"] },
                 { label: "Lighting", name: "lighting", options: ["Bright", "Medium", "Dim"] },
                 { label: "Crowded", name: "crowded", options: ["Low", "Medium", "High"] },
               ].map((field) => (

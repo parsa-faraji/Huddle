@@ -68,7 +68,7 @@ export default function Signup() {
         <div className="absolute top-[320px] left-[50%] transform -translate-x-1/2 w-80 flex flex-col gap-4">
           {[
             { label: "First Name and Last Name", name: "name", placeholder: "Type full name", type: "text" },
-            { label: "Email", name: "email", placeholder: "name@berkeley.edu", type: "email" },
+            { label: "Email", name: "email", placeholder: "your.email@school.edu", type: "email" },
             { label: "Password", name: "password", placeholder: "Type password", type: "password" },
             { label: "Confirm Password", name: "confirm", placeholder: "Type password again", type: "password" },
           ].map((field) => (

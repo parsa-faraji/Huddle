@@ -29,11 +29,9 @@ const Badge = ({ label, color }) => {
 };
 
 const noiseBadgeColor = (level) =>
-  level === "Quiet" ? "green" : level === "Medium" ? "orange" : level === "Loud" ? "red" : "grey";
+  level === "Silent" || level === "Quiet" ? "green" : level === "Medium" ? "orange" : level === "Loud" ? "red" : "grey";
 const paceBadgeColor = (type) =>
   type === "Slow" ? "green" : type === "Medium" ? "orange" : type === "Fast" ? "red" : "grey";
-const groupBadgeColor = (type) =>
-  type === "In-Person" ? "green" : type === "Hybrid" ? "orange" : type === "Virtual" ? "red" : "grey";
 const crowdBadgeColor = (numPeople) => {
   if (numPeople <= 3) return "green";       // small group
   if (numPeople <= 5) return "orange";     // medium group

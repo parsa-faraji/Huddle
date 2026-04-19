@@ -18,6 +18,8 @@ export interface Spot {
   ratingSum?: number;
   ratingCount?: number;
   image?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export function subscribeSpots(cb: (spots: Spot[]) => void) {

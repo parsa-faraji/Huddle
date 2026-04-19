@@ -78,7 +78,7 @@ export default function Login() {
 
         {/* Form block */}
         <div className="absolute top-[320px] left-[50%] transform -translate-x-1/2 w-80 flex flex-col gap-4">
-          <label className="text-xs font-bold text-black">Email / Username</label>
+          <label className="text-xs font-bold text-black">Email</label>
           <input
             name="email"
             value={form.email}
