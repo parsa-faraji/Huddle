@@ -31,14 +31,13 @@ export default function StudySessionLog() {
   const handleSelect = (name, value) => setFormData({ ...formData, [name]: value });
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!spot) return;
-
-    // Add session data
-    addSession({ ...formData, id: Date.now(), spotId: spot.id, spot: spot.name });
-
-    // Open modal instead of resetting form immediately
+    // Await the rating write so the subsequent "Insights" view and any
+    // navigation sees a consistent Firestore state. The modal opens only
+    // after the transaction lands.
+    await addSession({ ...formData, id: Date.now(), spotId: spot.id, spot: spot.name });
     setIsModalOpen(true);
   };
 

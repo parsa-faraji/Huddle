@@ -1,1 +1,95 @@
 @import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Huddle design tokens
+ * Centralized palette + type/shadow scale so per-component classes
+ * stop reinventing values. CSS custom properties let us reference
+ * them from arbitrary-value Tailwind classes (e.g. text-[--huddle-ink]).
+ * ------------------------------------------------------------------ */
+:root {
+  /* Palette */
+  --huddle-amber: #ffb000;
+  --huddle-amber-soft: #ffdc90;
+  --huddle-cream: #ffecc1;
+  --huddle-ink: #1a1a2e;
+  --huddle-sub: #5c4033;
+  --huddle-navy: #0c2241;
+  --huddle-gold: #f9c84a;
+
+  /* Radii */
+  --r-card: 20px;
+  --r-pill: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06), 0 1px 1px rgb(15 23 42 / 0.04);
+  --shadow-md: 0 4px 12px rgb(15 23 42 / 0.08), 0 2px 4px rgb(15 23 42 / 0.04);
+  --shadow-lg: 0 12px 32px rgb(15 23 42 / 0.14), 0 4px 10px rgb(15 23 42 / 0.06);
+  --shadow-ring: 0 0 0 3px rgb(249 200 74 / 0.55);
+}
+
+/* ------------------------------------------------------------------ *
+ * Accessibility: visible focus ring on every interactive element that
+ * doesn't already opt out. Uses :focus-visible so mouse users don't
+ * see it on click.
+ * ------------------------------------------------------------------ */
+:where(button, a, [role="button"], input, textarea, select):focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-ring);
+  border-radius: 10px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Skeleton loading shimmer
+ * ------------------------------------------------------------------ */
+@keyframes huddle-skeleton {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.huddle-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.55) 0%,
+    rgb(255 255 255 / 0.85) 50%,
+    rgb(255 255 255 / 0.55) 100%
+  );
+  background-size: 200% 100%;
+  animation: huddle-skeleton 1.2s ease-in-out infinite;
+  border-radius: 16px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Typography utilities (design-system level)
+ * ------------------------------------------------------------------ */
+.h-title {
+  font-family: "Marcellus SC", serif;
+  font-size: 2.75rem;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--huddle-ink);
+}
+.h-section {
+  font-family: "Jost", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--huddle-ink);
+  letter-spacing: -0.005em;
+}
+.h-card {
+  font-family: "Jost", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--huddle-ink);
+  letter-spacing: -0.005em;
+}
+.body-text {
+  font-family: "Jost", sans-serif;
+  font-size: 0.875rem;
+  color: var(--huddle-ink);
+  line-height: 1.45;
+}
+.caption-text {
+  font-family: "Jost", sans-serif;
+  font-size: 0.75rem;
+  color: var(--huddle-sub);
+  line-height: 1.4;
+}

@@ -22,5 +22,19 @@ export async function signUpAndLand(page: Page): Promise<string> {
   await page.getByRole('button', { name: /create account|creating/i }).click();
   await page.waitForURL('**/study-spots**', { timeout: 15_000 });
   await expect(page.getByText('Find a study spot!')).toBeVisible();
+  await dismissTourIfPresent(page);
   return email;
+}
+
+/**
+ * The first-visit "How Huddle works" tour renders a full-screen modal that
+ * intercepts pointer events. Tests that aren't specifically exercising the
+ * tour call this helper to get past it.
+ */
+export async function dismissTourIfPresent(page: Page): Promise<void> {
+  const skip = page.getByTestId('onboarding-dismiss');
+  if (await skip.isVisible().catch(() => false)) {
+    await skip.click();
+    await skip.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+  }
 }

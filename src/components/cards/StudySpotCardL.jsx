@@ -51,22 +51,28 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
   return (
     <>
       <div className="flex justify-center w-full p-4">
-        <div className="bg-white rounded-3xl shadow-md p-4 max-w-md w-full flex flex-col gap-3">
+        <div
+          className="bg-white rounded-3xl p-5 max-w-md w-full flex flex-col gap-3"
+          style={{ boxShadow: "var(--shadow-lg)" }}
+        >
 
           {/* IMAGE */}
-          <img src={data?.image ?? "/cat.webp"} alt={data?.name ?? "image"} className="w-full h-52 object-cover rounded-2xl" />
+          <img
+            src={data?.image ?? "/cat.webp"}
+            alt={data?.name ?? "image"}
+            loading="lazy"
+            className="w-full h-52 object-cover rounded-2xl"
+          />
 
-          {/* NAME */}
-          <div className="bg-blue-100 rounded-2xl px-3 py-2">
-            <h1 className="text-xl font-bold text-gray-800" style={{ fontFamily: "'Jost', sans-serif" }}>
+          {/* NAME + DISTANCE */}
+          <div className="flex items-baseline justify-between gap-2">
+            <h1 className="h-section truncate" style={{ fontSize: "1.25rem" }}>
               {data.name}
             </h1>
+            {data.distance !== undefined && (
+              <span className="caption-text shrink-0">{data.distance} mi</span>
+            )}
           </div>
-
-          {/* DISTANCE */}
-          <p className="text-gray-700 font-medium text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>
-            {data.distance} miles away
-          </p>
 
           {/* TAG BADGES */}
           <div className="flex flex-wrap gap-2 mt-2">
@@ -116,7 +122,7 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
           <div className="flex gap-2 mt-3">
             <button
               onClick={() => (onJoin ? onJoin() : setModalOpen(true))}
-              className="flex-1 bg-sky-950 hover:bg-sky-900 transition-colors text-white font-bold text-sm rounded-2xl cursor-pointer py-2"
+              className="flex-1 bg-sky-950 hover:bg-sky-900 active:bg-sky-800 transition-colors text-white font-bold text-sm rounded-2xl cursor-pointer py-2.5"
               style={{ fontFamily: "'Jost', sans-serif" }}
             >
               {buttonText}
@@ -127,7 +133,7 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
                   state: { spotData: data },
                 })
               }
-              className="flex-1 bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 font-bold text-sm rounded-2xl cursor-pointer py-2"
+              className="flex-1 bg-amber-300 hover:bg-amber-400 active:bg-amber-500 transition-colors text-gray-900 font-bold text-sm rounded-2xl cursor-pointer py-2.5"
               style={{ fontFamily: "'Jost', sans-serif" }}
             >
               Rate

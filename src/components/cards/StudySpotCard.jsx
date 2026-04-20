@@ -51,19 +51,18 @@ export default function StudySpotCard({ spot }) {
 
   return (
     <div className="flex justify-center w-full">
-      <div className="bg-white rounded-3xl shadow-md p-4 max-w-xs w-full flex flex-col gap-3">
+      <div
+        className="bg-white rounded-3xl p-5 w-full max-w-sm flex flex-col gap-3"
+        style={{ boxShadow: "var(--shadow-md)" }}
+      >
 
         {/* HEADER */}
-        <div className="bg-blue-100 rounded-2xl px-3 py-2">
-          <h1 className="text-xl font-bold text-gray-800" style={{ fontFamily: "'Jost', sans-serif" }}>
-            {spot.name}
-          </h1>
+        <div className="flex items-baseline justify-between gap-2">
+          <h1 className="h-card truncate">{spot.name}</h1>
+          {spot.distance !== undefined && (
+            <span className="caption-text shrink-0">{spot.distance} mi</span>
+          )}
         </div>
-
-        {/* DISTANCE */}
-        <p className="text-gray-700 font-medium text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>
-          {spot.distance} miles away
-        </p>
 
         {/* BADGES */}
         <div className="flex flex-wrap gap-2">
@@ -134,7 +133,7 @@ export default function StudySpotCard({ spot }) {
         {/* LARGE VIEW BUTTON */}
         <button
           onClick={() => navigate(`/study-spots/${spot.id}`)}
-          className="bg-amber-300 hover:bg-amber-400 cursor-pointer transition-colors text-gray-800 font-semibold text-sm rounded-2xl py-2 w-full mt-0"
+          className="bg-amber-300 hover:bg-amber-400 active:bg-amber-500 cursor-pointer transition-colors text-gray-900 font-semibold text-sm rounded-2xl py-2.5 w-full mt-1"
           style={{ fontFamily: "'Jost', sans-serif" }}
         >
           View

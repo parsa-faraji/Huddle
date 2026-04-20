@@ -54,26 +54,30 @@ export default function ExpandedCard({ data, buttonText = "Join", onJoin }) {
   return (
     <>
       <div className="flex justify-center w-full p-4">
-        <div className="bg-white rounded-3xl shadow-md p-4 max-w-md w-full flex flex-col gap-3">
+        <div
+          className="bg-white rounded-3xl p-5 max-w-md w-full flex flex-col gap-3"
+          style={{ boxShadow: "var(--shadow-lg)" }}
+        >
 
           {/* IMAGE */}
-          <img src={data?.image ?? "/cat.webp"} alt={data?.name ?? "image"} className="w-full h-52 object-cover rounded-2xl" />
+          <img
+            src={data?.image ?? "/cat.webp"}
+            alt={data?.name ?? "image"}
+            loading="lazy"
+            className="w-full h-52 object-cover rounded-2xl"
+          />
 
           {/* COURSE/NAME */}
           {(data.name || data.course) && (
-            <div className="bg-blue-100 rounded-2xl px-3 py-2">
-              <h1 className="text-xl font-bold text-gray-800" style={{ fontFamily: "'Jost', sans-serif" }}>
+            <div className="flex flex-col gap-0.5">
+              <h1 className="h-section" style={{ fontSize: "1.25rem" }}>
                 {data.name ?? data.course}
               </h1>
+              <div className="flex flex-wrap gap-x-3 caption-text">
+                {data.course && <span>Course: {data.course}</span>}
+                {data.creator && <span>By {data.creator}</span>}
+              </div>
             </div>
-          )}
-
-          {/* INFO LINE */}
-          {(data.creator || data.name) && (
-            <>
-              {data.course && <p className="text-gray-700 font-medium text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>Course: {data.course}</p>}
-              {data.creator && <p className="text-gray-700 font-medium text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>Created By: {data.creator}</p>}
-            </>
           )}
 
           {/* BADGES */}
@@ -96,7 +100,7 @@ export default function ExpandedCard({ data, buttonText = "Join", onJoin }) {
           {/* JOIN BUTTON */}
           <button
             onClick={handleJoinClick}
-            className="bg-amber-300 hover:bg-amber-400 transition-colors text-gray-800 font-bold text-xs rounded-2xl py-2 w-full self-center cursor-pointer mt-3"
+            className="bg-amber-300 hover:bg-amber-400 active:bg-amber-500 transition-colors text-gray-900 font-bold text-sm rounded-2xl py-2.5 w-full self-center cursor-pointer mt-3"
           >
             {buttonText}
           </button>

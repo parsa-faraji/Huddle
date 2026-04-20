@@ -5,54 +5,67 @@ export default function BottomNav() {
   const location = useLocation();
 
   const navItems = [
-    { to: "/study-spots", icon: "/map.svg" },
-    { to: "/study-groups", icon: "/person.svg" },
-    { to: "/insights", icon: "/insights.png" },
-    { to: "/profile", label: "Me" },
+    { to: "/study-spots", icon: "/map.svg", label: "Spots", alt: "Study spots" },
+    { to: "/study-groups", icon: "/person.svg", label: "Groups", alt: "Study groups" },
+    { to: "/insights", icon: "/insights.png", label: "You", alt: "Insights" },
+    { to: "/profile", label: "Me", alt: "Profile" },
   ];
 
   return (
-    <nav className="fixed bottom-4 left-0 w-full flex justify-center z-50">
-      {/* Rounded yellow pill background */}
+    <nav
+      className="fixed bottom-3 left-0 w-full flex justify-center z-50 pointer-events-none"
+      aria-label="Primary"
+    >
       <div
-        className="h-18 flex justify-around items-center shadow-lg px-4 gap-1"
-        style={{ backgroundColor: "#FFE3A5E0", borderRadius: "50px" }}
+        className="pointer-events-auto flex items-center gap-1 px-3 py-2 bg-amber-100/95 backdrop-blur-md rounded-full"
+        style={{ boxShadow: "var(--shadow-lg)" }}
       >
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
+          const isMeItem = item.to === "/profile";
 
           return (
-            <div
+            <button
               key={item.to}
-              className="relative flex flex-col items-center justify-center w-16 h-16 cursor-pointer"
+              type="button"
               onClick={() => navigate(item.to)}
+              aria-current={isActive ? "page" : undefined}
+              aria-label={item.alt}
+              className={`relative flex flex-col items-center justify-center gap-0.5 w-16 h-14 rounded-full transition-all cursor-pointer ${
+                isActive
+                  ? "bg-amber-300 shadow-[inset_0_2px_6px_rgba(255,176,0,0.2)]"
+                  : "hover:bg-amber-200/70"
+              }`}
             >
-              {/* Active circle */}
-              {isActive && (
-                <div
-                  className="absolute w-16 h-16 top-0 left-0 rounded-full z-0"
-                  style={{ backgroundColor: "#FFD475" }}
-                />
-              )}
-
-              {/* Icon or text label */}
               {item.icon ? (
                 <img
                   src={item.icon}
-                  className={`w-10 h-10 z-10 ${isActive ? "brightness-110" : "brightness-90"}`}
+                  alt=""
+                  className={`w-6 h-6 transition-opacity ${
+                    isActive ? "opacity-100" : "opacity-70"
+                  }`}
                 />
               ) : (
                 <span
-                  className={`z-10 text-sm font-semibold text-black ${
-                    isActive ? "opacity-100" : "opacity-80"
+                  className={`text-base font-bold transition-opacity ${
+                    isActive ? "text-gray-900" : "text-gray-900/70"
+                  }`}
+                  style={{ fontFamily: "'Jost', sans-serif" }}
+                >
+                  {isMeItem ? "Me" : item.label}
+                </span>
+              )}
+              {item.icon && (
+                <span
+                  className={`text-[0.6rem] font-semibold leading-none transition-opacity ${
+                    isActive ? "text-gray-900 opacity-100" : "text-gray-900/70"
                   }`}
                   style={{ fontFamily: "'Jost', sans-serif" }}
                 >
                   {item.label}
                 </span>
               )}
-
-            </div>
+            </button>
           );
         })}
       </div>

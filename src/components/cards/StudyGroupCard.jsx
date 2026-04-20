@@ -43,23 +43,20 @@ export default function Card({ data, buttonText = "View" }) {
 
   return (
     <div className="flex justify-center w-full">
-      <div className="bg-white rounded-3xl shadow-md p-4 w-full max-w-xs flex flex-col gap-3">
+      <div
+        className="bg-white rounded-3xl p-5 w-full max-w-sm flex flex-col gap-3"
+        style={{ boxShadow: "var(--shadow-md)" }}
+      >
 
         {/* HEADER */}
         {(data.name || data.course) && (
-          <div className="bg-blue-100 rounded-2xl px-3 py-2">
-            <h1 className="text-xl font-bold text-gray-800" style={{ fontFamily: "'Jost', sans-serif" }}>
-              {data.name ?? data.course}
-            </h1>
+          <div className="flex flex-col gap-0.5">
+            <h1 className="h-card truncate">{data.name ?? data.course}</h1>
+            <div className="flex flex-wrap gap-x-3 caption-text">
+              {data.course && <span>Course: {data.course}</span>}
+              {data.creator && <span>By {data.creator}</span>}
+            </div>
           </div>
-        )}
-
-        {/* INFO LINE */}
-        {(data.creator || data.name) && (
-          <>
-            {data.course && <p className="text-gray-700 font-medium text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>Course: {data.course}</p>}
-            {data.creator && <p className="text-gray-700 font-medium text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>Created By: {data.creator}</p>}
-          </>
         )}
 
         {/* BADGES */}
@@ -97,7 +94,7 @@ export default function Card({ data, buttonText = "View" }) {
         {/* BUTTON */}
         <button
           onClick={() => data.id && navigate(`/study-groups/${data.id}`)}
-          className="bg-amber-300 hover:bg-amber-400 cursor-pointer transition-colors text-gray-800 font-bold text-sm rounded-2xl py-2 w-full"
+          className="bg-amber-300 hover:bg-amber-400 active:bg-amber-500 cursor-pointer transition-colors text-gray-900 font-bold text-sm rounded-2xl py-2.5 w-full mt-1"
           style={{ fontFamily: "'Jost', sans-serif" }}
         >
           {buttonText}

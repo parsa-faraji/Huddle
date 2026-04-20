@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudyGroupCard from "../../components/cards/StudyGroupCard";
+import { EmptyState, SkeletonStack } from "../../components/Skeletons";
 import { useApp } from "../../context/AppContext";
 
 export default function StudyGroupDiscovery() {
@@ -49,21 +50,28 @@ export default function StudyGroupDiscovery() {
         {/* CARDS */}
         <div className="w-full flex flex-col gap-4 mt-6">
           {!groupsLoaded ? (
-            <p
-              className="text-[#5C4033] text-center py-12"
-              style={{ fontFamily: "'Jost', sans-serif" }}
-            >
-              Loading groups…
-            </p>
+            <SkeletonStack count={3} groupCard />
           ) : filteredGroups.length === 0 ? (
-            <p
-              className="text-gray-600 text-center py-12"
-              style={{ fontFamily: "'Jost', sans-serif" }}
-            >
-              {search
-                ? "No groups match your search."
-                : "No study groups yet. Create the first one!"}
-            </p>
+            <EmptyState
+              icon={search ? "🔎" : "✨"}
+              title={search ? "No matches" : "Be the first"}
+              body={
+                search
+                  ? `Nothing found for "${search}".`
+                  : "No study groups yet. Create one and invite classmates."
+              }
+              action={
+                !search && (
+                  <button
+                    type="button"
+                    onClick={() => navigate("/study-groups/create")}
+                    className="mt-2 px-4 py-2 rounded-full bg-sky-950 text-white text-sm font-bold cursor-pointer"
+                  >
+                    Create a group
+                  </button>
+                )
+              }
+            />
           ) : (
             filteredGroups.map((group) => (
               <div

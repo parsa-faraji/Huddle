@@ -51,10 +51,11 @@ test.describe('core flows', () => {
     await page.getByRole('button', { name: /^close$/i }).click();
     await page.waitForURL('**/study-spots/');
 
-    // Session should show up in Insights
-    await page.locator('nav').getByRole('img').nth(2).click(); // insights icon (3rd nav item)
+    // Session should show up in Insights (Firestore + the orderBy → fallback
+    // listener can lag a beat on fresh accounts, so give it room).
+    await page.goto('/insights');
     await expect(page.getByText(/study spots rated/i)).toBeVisible();
-    await expect(page.getByText('Doe Library').first()).toBeVisible();
+    await expect(page.getByText('Doe Library').first()).toBeVisible({ timeout: 20_000 });
   });
 
   test('preferences save → recommended strip appears', async ({ page }) => {

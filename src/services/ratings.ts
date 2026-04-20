@@ -2,7 +2,6 @@ import {
   collection,
   doc,
   onSnapshot,
-  orderBy,
   query,
   runTransaction,
   serverTimestamp,
@@ -60,40 +59,23 @@ export async function submitRating(
 }
 
 export function subscribeUserSessions(uid: string, cb: (sessions: Session[]) => void) {
-  // Prefer the composite index (userId + createdAt DESC) when it's available;
-  // fall back to the where-only query + in-memory sort if the index is still
-  // building or the error callback fires for any other reason. This keeps the
-  // app responsive during the index-build window after deploy.
-  const ordered = query(
-    collection(db, 'ratings'),
-    where('userId', '==', uid),
-    orderBy('createdAt', 'desc'),
-  );
-  let unsubFallback: (() => void) | null = null;
-  const unsubOrdered = onSnapshot(
-    ordered,
-    (snap) => {
-      cb(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Session, 'id'>) })));
-    },
-    () => {
-      if (unsubFallback) return;
-      const plain = query(collection(db, 'ratings'), where('userId', '==', uid));
-      unsubFallback = onSnapshot(plain, (snap) => {
-        const rows = snap.docs.map((d) => ({
-          id: d.id,
-          ...(d.data() as Omit<Session, 'id'>),
-        }));
-        rows.sort((a, b) => {
-          const at = (a as { createdAt?: { toMillis?: () => number } }).createdAt;
-          const bt = (b as { createdAt?: { toMillis?: () => number } }).createdAt;
-          return (bt?.toMillis?.() ?? 0) - (at?.toMillis?.() ?? 0);
-        });
-        cb(rows);
-      });
-    },
-  );
-  return () => {
-    unsubOrdered();
-    if (unsubFallback) unsubFallback();
-  };
+  // Use the where-only query + in-memory sort. Firestore's `orderBy` skips
+  // docs where the field is null, which hides a freshly-written rating until
+  // the server stamps `createdAt` — that shows up to users as a phantom
+  // "empty Insights" for several seconds. Sorting on the client keeps the
+  // doc visible immediately (the pending timestamp resolves as 0 and lands
+  // at the bottom briefly, then jumps into position once confirmed).
+  const plain = query(collection(db, 'ratings'), where('userId', '==', uid));
+  return onSnapshot(plain, (snap) => {
+    const rows = snap.docs.map((d) => ({
+      id: d.id,
+      ...(d.data() as Omit<Session, 'id'>),
+    }));
+    rows.sort((a, b) => {
+      const at = (a as { createdAt?: { toMillis?: () => number } }).createdAt;
+      const bt = (b as { createdAt?: { toMillis?: () => number } }).createdAt;
+      return (bt?.toMillis?.() ?? 0) - (at?.toMillis?.() ?? 0);
+    });
+    cb(rows);
+  });
 }

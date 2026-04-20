@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { friendlyAuthError } from "../../services/authErrors";
+import HowItWorks from "../../components/HowItWorks";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showTour, setShowTour] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -121,8 +123,18 @@ export default function Login() {
           >
             {busy ? "Signing in..." : "Sign in"}
           </button>
+
+          <button
+            type="button"
+            onClick={() => setShowTour(true)}
+            className="text-xs font-semibold text-black/70 hover:text-black cursor-pointer underline underline-offset-2"
+          >
+            See how Huddle works
+          </button>
         </div>
       </div>
+
+      <HowItWorks open={showTour} onClose={() => setShowTour(false)} />
     </div>
   );
 }

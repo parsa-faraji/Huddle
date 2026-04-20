@@ -16,19 +16,22 @@ test.describe('group chat', () => {
 
     // Join the group.
     await page.getByRole('button', { name: /^join$/i }).click();
-    // CreateModal / JoinModal dismissal — close it if it appears.
+    // JoinModal dismissal — close it and wait for it to actually leave the DOM
+    // before interacting with anything below.
     const closeBtn = page.getByRole('button', { name: /^close$/i });
     if (await closeBtn.isVisible().catch(() => false)) {
       await closeBtn.click();
+      await expect(closeBtn).toHaveCount(0, { timeout: 5_000 });
     }
 
     // After joining: the chat panel renders.
     await expect(page.getByTestId('group-chat')).toBeVisible({ timeout: 15_000 });
 
-    // Send a message and see it echoed back from Firestore.
+    // Send a message (press Enter — the Send button sits near the bottom nav
+    // and clicking it would need `force: true` to bypass the nav overlay).
     const message = `Hello at ${Date.now()}`;
     await page.getByTestId('group-chat-input').fill(message);
-    await page.getByTestId('group-chat-send').click();
+    await page.getByTestId('group-chat-input').press('Enter');
     await expect(page.getByTestId('group-chat-messages')).toContainText(message, {
       timeout: 10_000,
     });

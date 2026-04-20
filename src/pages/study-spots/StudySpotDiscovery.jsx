@@ -1,12 +1,16 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudySpotCard from "../../components/cards/StudySpotCard";
+import { EmptyState, SkeletonStack } from "../../components/Skeletons";
+import HowItWorks from "../../components/HowItWorks";
 import { useApp } from "../../context/AppContext";
 import { hasAnyPreferences, topRecommendations } from "../../utils/recommendations";
 
 const MapView = lazy(() => import("../../components/MapView"));
 
-const ONBOARDING_KEY = "huddle:onboarded:v1";
+// v2 bumps the key so returning users who dismissed the old banner still
+// see the new interactive tour once.
+const ONBOARDING_KEY = "huddle:onboarded:v2";
 
 const FILTERS = [
   { key: "quiet", label: "Quiet", match: (s) => s.noiseLevel === "Silent" },
@@ -155,31 +159,22 @@ export default function StudySpotDiscovery() {
           </div>
         )}
 
-        {/* ONBOARDING HINT (first visit) */}
-        {view === "list" && showOnboarding && (
-          <div
-            className="w-full mt-4 bg-sky-950 text-amber-100 rounded-xl px-4 py-3 shadow-md"
-            style={{ fontFamily: "'Jost', sans-serif" }}
-            role="region"
-            aria-label="Welcome to Huddle"
-            data-testid="onboarding-banner"
-          >
-            <p className="text-sm font-semibold">Welcome to Huddle</p>
-            <ul className="mt-1 text-xs leading-relaxed list-disc list-inside space-y-0.5">
-              <li>Tap a spot to see info and check in live.</li>
-              <li>Rate spots so others know what to expect.</li>
-              <li>Set preferences on Profile for better recommendations.</li>
-            </ul>
-            <button
-              type="button"
-              onClick={dismissOnboarding}
-              data-testid="onboarding-dismiss"
-              className="mt-2 text-xs font-bold underline cursor-pointer"
-            >
-              Got it
-            </button>
-          </div>
-        )}
+        {/* HELP / RE-OPEN TOUR */}
+        <button
+          type="button"
+          onClick={() => setShowOnboarding(true)}
+          aria-label="How Huddle works"
+          title="How Huddle works"
+          className="absolute right-5 top-6 w-9 h-9 rounded-full bg-white/80 text-sky-950 font-bold text-sm flex items-center justify-center cursor-pointer hover:bg-white transition"
+          style={{ boxShadow: "var(--shadow-sm)" }}
+        >
+          ?
+        </button>
+
+        <HowItWorks
+          open={showOnboarding}
+          onClose={dismissOnboarding}
+        />
 
         {/* NO-PREFS HINT */}
         {view === "list" && !prefsSet && (
@@ -226,19 +221,17 @@ export default function StudySpotDiscovery() {
             </p>
           )}
           {!spotsLoaded ? (
-            <p
-              className="text-[#5C4033] text-center py-12"
-              style={{ fontFamily: "'Jost', sans-serif" }}
-            >
-              Loading spots…
-            </p>
+            <SkeletonStack count={3} />
           ) : filteredSpots.length === 0 ? (
-            <p
-              className="text-black text-center py-12"
-              style={{ fontFamily: "'Jost', sans-serif" }}
-            >
-              No spots match your search.
-            </p>
+            <EmptyState
+              icon="🔎"
+              title="No spots match"
+              body={
+                search
+                  ? `Nothing found for "${search}". Try a different search or clear filters.`
+                  : "Try clearing filters to see all spots."
+              }
+            />
           ) : (
             (recommended.length > 0 ? otherSpots : filteredSpots).map((spot) => (
               <StudySpotCard
