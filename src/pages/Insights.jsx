@@ -78,7 +78,7 @@ export default function InsightsPage() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div
-        className="w-96 h-screen relative
+        className="w-full max-w-96 h-screen relative
                    bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
                    shadow-2xl flex flex-col items-center pt-20 px-6 overflow-y-auto"
       >

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { friendlyAuthError } from "../../services/authErrors";
+import { isStudentEmail } from "../../services/studentEmail";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -25,6 +26,12 @@ export default function Signup() {
       setError("Passwords don't match.");
       return;
     }
+    if (!isStudentEmail(form.email)) {
+      setError(
+        "Huddle is limited to students — please use your school email (e.g. you@berkeley.edu).",
+      );
+      return;
+    }
     setBusy(true);
     try {
       await signUp(form.name.trim(), form.email.trim(), form.password);
@@ -43,7 +50,7 @@ export default function Signup() {
     >
       {/* Phone-sized yellow block */}
       <div
-        className="w-96 h-screen relative bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)] shadow-2xl"
+        className="w-full max-w-96 h-screen relative bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)] shadow-2xl"
       >
         {/* Huddle header (kept Marcellus) */}
         <h1 className="absolute left-[20px] top-[60px] text-5xl font-['Marcellus_SC'] text-black">
@@ -68,7 +75,7 @@ export default function Signup() {
         <div className="absolute top-[320px] left-[50%] transform -translate-x-1/2 w-80 flex flex-col gap-4">
           {[
             { label: "First Name and Last Name", name: "name", placeholder: "Type full name", type: "text" },
-            { label: "Email", name: "email", placeholder: "your.email@school.edu", type: "email" },
+            { label: "School Email", name: "email", placeholder: "you@school.edu", type: "email" },
             { label: "Password", name: "password", placeholder: "Type password", type: "password" },
             { label: "Confirm Password", name: "confirm", placeholder: "Type password again", type: "password" },
           ].map((field) => (

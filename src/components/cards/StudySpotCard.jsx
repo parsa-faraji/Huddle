@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useApp } from "../../context/AppContext";
 
 const InfoRow = ({ icon, label, value }) => (
   <div className="flex gap-2 items-start">
@@ -44,7 +45,9 @@ function displayRating(spot) {
 
 export default function StudySpotCard({ spot }) {
   const navigate = useNavigate();
+  const { checkinCounts } = useApp();
   const rating = displayRating(spot);
+  const hereNow = checkinCounts?.[spot.id] ?? 0;
 
   return (
     <div className="flex justify-center w-full">
@@ -86,6 +89,12 @@ export default function StudySpotCard({ spot }) {
             <div className="flex flex-col items-center">
               <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Rating</span>
               <Badge label={rating} color={ratingBadgeColor(Number(rating))} />
+            </div>
+          )}
+          {hereNow > 0 && (
+            <div className="flex flex-col items-center">
+              <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Here now</span>
+              <Badge label={`${hereNow} live`} color="green" />
             </div>
           )}
         </div>

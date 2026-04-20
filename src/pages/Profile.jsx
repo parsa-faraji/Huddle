@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
+import { extractDomain, isStudentEmail } from "../services/studentEmail";
 
 const PREF_FIELDS = [
   { label: "Noise Level", name: "noiseLevel", options: ["Silent", "Medium", "Loud"] },
@@ -49,7 +50,7 @@ export default function Profile() {
   return (
     <div className="flex justify-center items-start min-h-screen bg-white">
       <div
-        className="w-96 h-screen relative
+        className="w-full max-w-96 h-screen relative
                    bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
                    shadow-2xl overflow-y-auto flex flex-col items-center"
       >
@@ -66,6 +67,21 @@ export default function Profile() {
             <p className="text-xs text-gray-600 font-['Jost'] mt-1">
               {userDoc?.displayName || user?.displayName || user?.email}
             </p>
+            {(() => {
+              const emailForBadge = userDoc?.email || user?.email || "";
+              if (!isStudentEmail(emailForBadge)) return null;
+              const domain = userDoc?.schoolDomain || extractDomain(emailForBadge) || "";
+              return (
+                <span
+                  className="inline-flex items-center gap-1 mt-2 px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold"
+                  style={{ fontFamily: "'Jost', sans-serif" }}
+                  data-testid="student-badge"
+                >
+                  <span aria-hidden="true">✓</span>
+                  Verified student{domain ? ` · ${domain}` : ""}
+                </span>
+              );
+            })()}
           </div>
 
           <div>

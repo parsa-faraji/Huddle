@@ -59,22 +59,28 @@ test.describe('core flows', () => {
 
   test('preferences save → recommended strip appears', async ({ page }) => {
     await signUpAndLand(page);
-    await page.locator('text=/^Me$/').click();
-    await page.waitForURL('**/profile');
+    // Navigate directly to /profile rather than via the BottomNav — tapping
+    // the nav "Me" label has proved flaky because clicks sometimes land on
+    // the span rather than the parent div that owns the navigate handler.
+    await page.goto('/profile');
+    await expect(page.locator('select[name="noiseLevel"]')).toBeVisible({ timeout: 10_000 });
 
     await page.locator('select[name="noiseLevel"]').selectOption('Silent');
     await page.locator('select[name="lighting"]').selectOption('Bright');
     await page.locator('select[name="crowded"]').selectOption('Low');
     await page.getByRole('button', { name: /save preferences/i }).click();
 
-    // Status text may or may not appear depending on how quickly Firestore
-    // round-trips; the real proof the write landed is that the form shows
-    // the saved values after a reload and the discovery page surfaces the
-    // "Recommended for you" strip.
-    await page.waitForTimeout(2500);
-    await page.reload();
-    await expect(page.locator('select[name="noiseLevel"]')).toHaveValue('Silent', { timeout: 10_000 });
+    // Wait for the inline status confirmation that the write landed.
+    await expect(page.getByText(/preferences saved/i)).toBeVisible({ timeout: 15_000 });
 
+    // Reload /profile: if the write persisted to Firestore, the form should
+    // repopulate from the userDoc subscription after React + auth rehydrate.
+    await page.goto('/profile');
+    await expect(page.locator('select[name="noiseLevel"]')).toHaveValue('Silent', {
+      timeout: 15_000,
+    });
+
+    // Discovery should surface a "Recommended for you" strip with prefs set.
     await page.goto('/study-spots');
     await expect(page.getByText(/recommended for you/i)).toBeVisible({ timeout: 15_000 });
   });

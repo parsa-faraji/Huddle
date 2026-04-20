@@ -6,7 +6,7 @@ import { useApp } from "../../context/AppContext";
 export default function StudyGroupDiscovery() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  const { groups } = useApp();
+  const { groups, groupsLoaded } = useApp();
 
   const filteredGroups = groups.filter((group) =>
     (group.course || "").toLowerCase().includes(search.toLowerCase())
@@ -15,7 +15,7 @@ export default function StudyGroupDiscovery() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div
-        className="w-96 h-screen relative
+        className="w-full max-w-96 h-screen relative
                    bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
                    shadow-2xl flex flex-col items-center pt-20 px-6 overflow-y-auto pb-16"
       >
@@ -48,12 +48,21 @@ export default function StudyGroupDiscovery() {
 
         {/* CARDS */}
         <div className="w-full flex flex-col gap-4 mt-6">
-          {filteredGroups.length === 0 ? (
+          {!groupsLoaded ? (
             <p
-              className="text-gray-400 text-center py-12"
+              className="text-[#5C4033] text-center py-12"
               style={{ fontFamily: "'Jost', sans-serif" }}
             >
-              No groups match your search.
+              Loading groups…
+            </p>
+          ) : filteredGroups.length === 0 ? (
+            <p
+              className="text-gray-600 text-center py-12"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              {search
+                ? "No groups match your search."
+                : "No study groups yet. Create the first one!"}
             </p>
           ) : (
             filteredGroups.map((group) => (

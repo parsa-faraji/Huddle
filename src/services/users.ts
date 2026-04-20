@@ -25,6 +25,7 @@ export interface UserPreferences {
 export interface UserDoc {
   email: string;
   displayName: string;
+  schoolDomain?: string;
   joinedGroupIds: string[];
   joinedSpotIds: string[];
   preferences?: UserPreferences;

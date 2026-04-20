@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import JoinModal from "../modals/JoinModal";
+import { useApp } from "../../context/AppContext";
 
 const InfoRow = ({ icon, label, value }) => (
   <div className="flex gap-2 items-start">
@@ -17,6 +18,7 @@ const Badge = ({ label, color }) => {
     green: "bg-green-200 text-green-800",
     orange: "bg-orange-200 text-orange-800",
     red: "bg-red-300 text-red-800",
+    grey: "bg-gray-200 text-gray-800",
   };
   return (
     <div className={`rounded-full px-3 py-1 text-xs font-semibold text-center ${colors[color]}`} style={{ fontFamily: "'Jost', sans-serif" }}>
@@ -42,7 +44,9 @@ function displayRating(data) {
 export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onConfirmJoin }) {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const { checkinCounts } = useApp();
   const rating = displayRating(data);
+  const hereNow = checkinCounts?.[data.id] ?? 0;
 
   return (
     <>
@@ -88,6 +92,12 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
               <div className="flex flex-col items-center">
                 <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Rating</span>
                 <Badge label={rating} color={ratingBadgeColor(Number(rating))} />
+              </div>
+            )}
+            {hereNow > 0 && (
+              <div className="flex flex-col items-center">
+                <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Here now</span>
+                <Badge label={`${hereNow} live`} color="green" />
               </div>
             )}
           </div>

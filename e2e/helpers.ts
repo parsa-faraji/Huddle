@@ -2,7 +2,8 @@ import { Page, expect } from '@playwright/test';
 
 export function uniqueEmail(): string {
   const stamp = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  return `pw-test-${stamp}@huddle-e2e.test`;
+  // Use an .edu suffix so the signup student-gate accepts the account.
+  return `pw-test-${stamp}@huddle-e2e.edu`;
 }
 
 export const TEST_PASSWORD = 'pw-test-12345';

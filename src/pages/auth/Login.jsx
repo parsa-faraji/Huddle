@@ -55,7 +55,7 @@ export default function Login() {
     >
       {/* Phone-sized yellow block */}
       <div
-        className="w-96 h-screen relative bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)] shadow-2xl"
+        className="w-full max-w-96 h-screen relative bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)] shadow-2xl"
       >
         {/* Huddle header (kept as Marcellus) */}
         <h1 className="absolute left-[20px] top-[60px] text-5xl font-['Marcellus_SC'] text-black">

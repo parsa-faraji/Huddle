@@ -5,6 +5,7 @@ import iconUrl from "leaflet/dist/images/marker-icon.png";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 import { useNavigate } from "react-router-dom";
+import { useApp } from "../context/AppContext";
 
 L.Marker.prototype.options.icon = L.icon({
   iconUrl,
@@ -22,6 +23,7 @@ const DEFAULT_ZOOM = 16;
 
 export default function MapView({ spots }) {
   const navigate = useNavigate();
+  const { checkinCounts } = useApp();
   const withCoords = spots.filter(
     (s) => typeof s.lat === "number" && typeof s.lng === "number",
   );
@@ -39,32 +41,40 @@ export default function MapView({ spots }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {withCoords.map((spot) => (
-          <Marker key={spot.id} position={[spot.lat, spot.lng]}>
-            <Popup>
-              <div style={{ fontFamily: "'Jost', sans-serif" }}>
-                <p style={{ fontWeight: 700, fontSize: 14 }}>{spot.name}</p>
-                {spot.hours && (
-                  <p style={{ fontSize: 12, color: "#5C4033" }}>{spot.hours}</p>
-                )}
-                <button
-                  onClick={() => navigate(`/study-spots/${spot.id}`)}
-                  style={{
-                    marginTop: 6,
-                    padding: "4px 10px",
-                    background: "#fcd34d",
-                    borderRadius: 10,
-                    fontSize: 12,
-                    cursor: "pointer",
-                    fontWeight: 600,
-                  }}
-                >
-                  View
-                </button>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {withCoords.map((spot) => {
+          const count = checkinCounts?.[spot.id] ?? 0;
+          return (
+            <Marker key={spot.id} position={[spot.lat, spot.lng]}>
+              <Popup>
+                <div style={{ fontFamily: "'Jost', sans-serif" }}>
+                  <p style={{ fontWeight: 700, fontSize: 14 }}>{spot.name}</p>
+                  {spot.hours && (
+                    <p style={{ fontSize: 12, color: "#5C4033" }}>{spot.hours}</p>
+                  )}
+                  {count > 0 && (
+                    <p style={{ fontSize: 12, color: "#166534", fontWeight: 600 }}>
+                      {count} here now
+                    </p>
+                  )}
+                  <button
+                    onClick={() => navigate(`/study-spots/${spot.id}`)}
+                    style={{
+                      marginTop: 6,
+                      padding: "4px 10px",
+                      background: "#fcd34d",
+                      borderRadius: 10,
+                      fontSize: 12,
+                      cursor: "pointer",
+                      fontWeight: 600,
+                    }}
+                  >
+                    View
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
       {withCoords.length === 0 && (
         <p

@@ -14,6 +14,12 @@ import {
   updatePreferences as svcUpdatePreferences,
 } from "../services/users";
 import { subscribeUserSessions, submitRating as svcSubmitRating } from "../services/ratings";
+import {
+  checkIn as svcCheckIn,
+  cancelCheckIn as svcCancelCheckIn,
+  isStillActive,
+  subscribeActiveCheckins,
+} from "../services/checkins";
 
 const AppContext = createContext();
 
@@ -23,6 +29,10 @@ export function AppProvider({ children }) {
   const [groups, setGroups] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [userDoc, setUserDoc] = useState(null);
+  const [spotsLoaded, setSpotsLoaded] = useState(false);
+  const [groupsLoaded, setGroupsLoaded] = useState(false);
+  const [checkins, setCheckins] = useState([]);
+  const [now, setNow] = useState(() => Date.now());
 
   // Gate Firestore subscriptions on auth state. Security rules require a
   // signed-in user; subscribing before auth produces a permission-denied
@@ -33,18 +43,36 @@ export function AppProvider({ children }) {
       setGroups([]);
       setUserDoc(null);
       setSessions([]);
+      setSpotsLoaded(false);
+      setGroupsLoaded(false);
       return;
     }
-    const unsubSpots = subscribeSpots(setSpots);
-    const unsubGroups = subscribeGroups(setGroups);
+    const unsubSpots = subscribeSpots((s) => {
+      setSpots(s);
+      setSpotsLoaded(true);
+    });
+    const unsubGroups = subscribeGroups((g) => {
+      setGroups(g);
+      setGroupsLoaded(true);
+    });
     const unsubUser = subscribeUserDoc(user.uid, setUserDoc);
     const unsubSessions = subscribeUserSessions(user.uid, setSessions);
+    const unsubCheckins = subscribeActiveCheckins(setCheckins);
     return () => {
       unsubSpots();
       unsubGroups();
       unsubUser();
       unsubSessions();
+      unsubCheckins();
     };
+  }, [user]);
+
+  // Re-render once a minute so expired check-ins drop out of counts client-side
+  // even when Firestore hasn't pushed a new snapshot.
+  useEffect(() => {
+    if (!user) return;
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
   }, [user]);
 
   const joinedGroupIds = userDoc?.joinedGroupIds ?? [];
@@ -89,6 +117,27 @@ export function AppProvider({ children }) {
     await svcUpdatePreferences(user.uid, prefs);
   };
 
+  const activeCheckins = checkins.filter((c) => isStillActive(c, now));
+
+  const checkinCounts = activeCheckins.reduce((acc, c) => {
+    acc[c.spotId] = (acc[c.spotId] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const myCheckin = user
+    ? activeCheckins.find((c) => c.userId === user.uid)
+    : null;
+
+  const checkInAtSpot = async (spotId) => {
+    if (!user) return;
+    await svcCheckIn(user.uid, spotId);
+  };
+
+  const cancelMyCheckin = async () => {
+    if (!myCheckin) return;
+    await svcCancelCheckIn(myCheckin.id);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -98,6 +147,8 @@ export function AppProvider({ children }) {
         userDoc,
         joinedGroups,
         joinedSpots,
+        spotsLoaded,
+        groupsLoaded,
         joinGroup,
         leaveGroup,
         joinSpot,
@@ -105,6 +156,10 @@ export function AppProvider({ children }) {
         addGroup,
         addSession,
         updatePreferences,
+        checkinCounts,
+        myCheckin,
+        checkInAtSpot,
+        cancelMyCheckin,
       }}
     >
       {children}

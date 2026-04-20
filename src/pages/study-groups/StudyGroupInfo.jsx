@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StudyGroupCardL from "../../components/cards/StudyGroupCardL";
 import JoinModal from "../../components/modals/JoinModal";
+import GroupChat from "../../components/GroupChat";
 import { useApp } from "../../context/AppContext";
 import { getUserDocs } from "../../services/users";
 import { aggregatePreferences, topRecommendations } from "../../utils/recommendations";
@@ -65,7 +66,7 @@ export default function StudyGroupInfo() {
     <>
       <div className="flex justify-center items-center min-h-screen bg-white">
         <div
-          className="w-96 h-screen relative
+          className="w-full max-w-96 h-screen relative
                      bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
                      shadow-2xl overflow-y-auto flex flex-col items-center"
         >
@@ -107,6 +108,21 @@ export default function StudyGroupInfo() {
                       </p>
                     </button>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {isJoined ? (
+              <div className="w-full px-4">
+                <GroupChat groupId={group.id} />
+              </div>
+            ) : (
+              <div
+                className="w-full px-4"
+                style={{ fontFamily: "'Jost', sans-serif" }}
+              >
+                <div className="bg-white/60 rounded-2xl p-4 text-center text-xs text-[#5C4033]">
+                  Join this group to see messages and coordinate meetings.
                 </div>
               </div>
             )}

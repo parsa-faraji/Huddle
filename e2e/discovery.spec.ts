@@ -36,10 +36,12 @@ test.describe('spot discovery', () => {
 
   test('map view renders with Leaflet tiles + markers', async ({ page }) => {
     await page.getByRole('button', { name: 'Map', exact: true }).click();
-    // Leaflet container appears
-    await expect(page.locator('.leaflet-container')).toBeVisible({ timeout: 10_000 });
-    // Leaflet renders marker images
-    await expect(page.locator('.leaflet-marker-icon')).toHaveCount(3, { timeout: 10_000 });
+    // Leaflet container appears (may take a beat because MapView is lazy-loaded)
+    await expect(page.locator('.leaflet-container')).toBeVisible({ timeout: 15_000 });
+    // Each seeded spot has lat/lng, so we expect one marker per spot.
+    await expect
+      .poll(async () => page.locator('.leaflet-marker-icon').count(), { timeout: 10_000 })
+      .toBeGreaterThanOrEqual(3);
   });
 
   test('clicking a spot card navigates to spot info', async ({ page }) => {

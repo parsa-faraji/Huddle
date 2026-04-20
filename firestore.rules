@@ -51,6 +51,35 @@ service cloud.firestore {
       allow delete: if isSignedIn()
         && resource.data.ownerId is string
         && resource.data.ownerId == request.auth.uid;
+
+      // Messages subcollection: only current members can read or write;
+      // message authors can only create messages as themselves.
+      match /messages/{messageId} {
+        function isMember() {
+          return isSignedIn()
+            && request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds;
+        }
+        allow read: if isMember();
+        allow create: if isMember()
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.body is string
+          && request.resource.data.body.size() > 0
+          && request.resource.data.body.size() <= 500;
+        allow update, delete: if false;
+      }
+    }
+
+    // Check-ins: signed-in users can read all (for live counts); write only their own.
+    // Docs must carry an expiresAt Timestamp so clients can filter by it.
+    match /checkins/{checkinId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.spotId is string;
+      allow delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+      allow update: if false;
     }
 
     // Deny everything else by default

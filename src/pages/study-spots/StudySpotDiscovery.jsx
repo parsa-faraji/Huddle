@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudySpotCard from "../../components/cards/StudySpotCard";
-import MapView from "../../components/MapView";
 import { useApp } from "../../context/AppContext";
-import { topRecommendations } from "../../utils/recommendations";
+import { hasAnyPreferences, topRecommendations } from "../../utils/recommendations";
+
+const MapView = lazy(() => import("../../components/MapView"));
+
+const ONBOARDING_KEY = "huddle:onboarded:v1";
 
 const FILTERS = [
   { key: "quiet", label: "Quiet", match: (s) => s.noiseLevel === "Silent" },
@@ -15,9 +18,27 @@ export default function StudySpotDiscovery() {
   const [search, setSearch] = useState("");
   const [active, setActive] = useState({});
   const [view, setView] = useState("list"); // "list" | "map"
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const navigate = useNavigate();
-  const { spots, userDoc } = useApp();
+  const { spots, userDoc, spotsLoaded } = useApp();
+
+  useEffect(() => {
+    try {
+      setShowOnboarding(localStorage.getItem(ONBOARDING_KEY) !== "1");
+    } catch {
+      setShowOnboarding(false);
+    }
+  }, []);
+
+  const dismissOnboarding = () => {
+    setShowOnboarding(false);
+    try {
+      localStorage.setItem(ONBOARDING_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+  };
 
   const toggle = (key) =>
     setActive((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -28,11 +49,14 @@ export default function StudySpotDiscovery() {
   });
 
   const recommended = topRecommendations(spots, userDoc?.preferences, 3);
+  const recommendedIds = new Set(recommended.map((s) => s.id));
+  const otherSpots = filteredSpots.filter((s) => !recommendedIds.has(s.id));
+  const prefsSet = hasAnyPreferences(userDoc?.preferences);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div
-        className="w-96 h-screen relative
+        className="w-full max-w-96 h-screen relative
                    bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
                    shadow-2xl flex flex-col items-center pt-20 px-6 overflow-y-auto"
       >
@@ -114,8 +138,59 @@ export default function StudySpotDiscovery() {
         {/* MAP VIEW */}
         {view === "map" && (
           <div className="w-full mt-6 pb-24">
-            <MapView spots={filteredSpots} />
+            <Suspense
+              fallback={
+                <div className="w-full h-[60vh] rounded-2xl bg-white/60 flex items-center justify-center">
+                  <p
+                    className="text-sm text-[#5C4033]"
+                    style={{ fontFamily: "'Jost', sans-serif" }}
+                  >
+                    Loading map…
+                  </p>
+                </div>
+              }
+            >
+              <MapView spots={filteredSpots} />
+            </Suspense>
           </div>
+        )}
+
+        {/* ONBOARDING HINT (first visit) */}
+        {view === "list" && showOnboarding && (
+          <div
+            className="w-full mt-4 bg-sky-950 text-amber-100 rounded-xl px-4 py-3 shadow-md"
+            style={{ fontFamily: "'Jost', sans-serif" }}
+            role="region"
+            aria-label="Welcome to Huddle"
+            data-testid="onboarding-banner"
+          >
+            <p className="text-sm font-semibold">Welcome to Huddle</p>
+            <ul className="mt-1 text-xs leading-relaxed list-disc list-inside space-y-0.5">
+              <li>Tap a spot to see info and check in live.</li>
+              <li>Rate spots so others know what to expect.</li>
+              <li>Set preferences on Profile for better recommendations.</li>
+            </ul>
+            <button
+              type="button"
+              onClick={dismissOnboarding}
+              data-testid="onboarding-dismiss"
+              className="mt-2 text-xs font-bold underline cursor-pointer"
+            >
+              Got it
+            </button>
+          </div>
+        )}
+
+        {/* NO-PREFS HINT */}
+        {view === "list" && !prefsSet && (
+          <button
+            type="button"
+            onClick={() => navigate("/profile")}
+            className="w-full mt-4 bg-white/70 rounded-xl px-4 py-2 text-xs text-[#5C4033] cursor-pointer hover:bg-white text-left"
+            style={{ fontFamily: "'Jost', sans-serif" }}
+          >
+            Set your study preferences on Profile to see personalized recommendations.
+          </button>
         )}
 
         {/* RECOMMENDED FOR YOU */}
@@ -142,7 +217,7 @@ export default function StudySpotDiscovery() {
         {/* CARDS */}
         {view === "list" && (
         <div className="w-full flex flex-col gap-4 mb-6 pb-24 mt-6">
-          {recommended.length > 0 && (
+          {recommended.length > 0 && otherSpots.length > 0 && (
             <p
               className="text-sm text-black font-semibold"
               style={{ fontFamily: "'Jost', sans-serif" }}
@@ -150,7 +225,14 @@ export default function StudySpotDiscovery() {
               All spots
             </p>
           )}
-          {filteredSpots.length === 0 ? (
+          {!spotsLoaded ? (
+            <p
+              className="text-[#5C4033] text-center py-12"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              Loading spots…
+            </p>
+          ) : filteredSpots.length === 0 ? (
             <p
               className="text-black text-center py-12"
               style={{ fontFamily: "'Jost', sans-serif" }}
@@ -158,7 +240,7 @@ export default function StudySpotDiscovery() {
               No spots match your search.
             </p>
           ) : (
-            filteredSpots.map((spot) => (
+            (recommended.length > 0 ? otherSpots : filteredSpots).map((spot) => (
               <StudySpotCard
                 key={spot.id}
                 spot={spot}
