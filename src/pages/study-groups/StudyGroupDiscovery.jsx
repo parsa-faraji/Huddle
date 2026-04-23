@@ -14,21 +14,21 @@ export default function StudyGroupDiscovery() {
   );
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white">
+    <div className="flex justify-center items-center min-h-screen bg-white dark:bg-[--huddle-card]">
       <div
         className="w-full max-w-96 h-screen relative
-                   bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
+                   huddle-frame
                    shadow-2xl flex flex-col items-center pt-20 px-6 overflow-y-auto pb-16"
       >
         {/* TITLE */}
-        <h1 className="absolute left-6 top-6 text-5xl font-['Marcellus_SC'] text-black">
+        <h1 className="absolute left-6 top-6 text-5xl font-['Marcellus_SC'] text-black dark:text-[--huddle-text]">
           Huddle
         </h1>
 
         {/* Header */}
         <div className="flex items-center justify-center w-full mt-10">
           <h2
-            className="text-center text-black font-medium text-lg"
+            className="text-center text-black dark:text-[--huddle-text] font-medium text-lg"
             style={{ fontFamily: "'Jost', sans-serif" }}
           >
             Join a study group!
@@ -42,7 +42,7 @@ export default function StudyGroupDiscovery() {
             placeholder="Search study groups..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full max-w-xs bg-white border border-gray-200 rounded-2xl px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+            className="w-full max-w-xs bg-white dark:bg-[--huddle-card] border border-gray-200 dark:border-[--huddle-border] rounded-2xl px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
             style={{ fontFamily: "'Jost', sans-serif" }}
           />
         </div>

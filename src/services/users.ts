@@ -28,6 +28,8 @@ export interface UserDoc {
   schoolDomain?: string;
   joinedGroupIds: string[];
   joinedSpotIds: string[];
+  favoriteSpotIds?: string[];
+  themePreference?: 'light' | 'dark' | 'auto';
   preferences?: UserPreferences;
 }
 
@@ -92,4 +94,25 @@ export function removeJoinedGroup(uid: string, groupId: string) {
 
 export function updatePreferences(uid: string, preferences: UserPreferences) {
   return setDoc(doc(db, 'users', uid), { preferences }, { merge: true });
+}
+
+export function addFavoriteSpot(uid: string, spotId: string) {
+  return setDoc(
+    doc(db, 'users', uid),
+    { favoriteSpotIds: arrayUnion(spotId) },
+    { merge: true },
+  );
+}
+
+export function removeFavoriteSpot(uid: string, spotId: string) {
+  return updateDoc(doc(db, 'users', uid), {
+    favoriteSpotIds: arrayRemove(spotId),
+  });
+}
+
+export function updateThemePreference(
+  uid: string,
+  themePreference: 'light' | 'dark' | 'auto',
+) {
+  return setDoc(doc(db, 'users', uid), { themePreference }, { merge: true });
 }

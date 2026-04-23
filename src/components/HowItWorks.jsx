@@ -62,7 +62,7 @@ export default function HowItWorks({ open, onClose }) {
         className="absolute inset-0 bg-black/55 cursor-pointer"
       />
       <div
-        className="relative w-full max-w-sm bg-white rounded-[24px] p-6 flex flex-col gap-4"
+        className="relative w-full max-w-sm bg-white dark:bg-[--huddle-card] rounded-[24px] p-6 flex flex-col gap-4"
         style={{ boxShadow: "var(--shadow-lg)", fontFamily: "'Jost', sans-serif" }}
       >
         {/* Progress dots */}
@@ -72,7 +72,7 @@ export default function HowItWorks({ open, onClose }) {
               <span
                 key={idx}
                 className={`h-1.5 rounded-full transition-all ${
-                  idx === i ? "w-6 bg-amber-400" : "w-1.5 bg-gray-200"
+                  idx === i ? "w-6 bg-amber-400" : "w-1.5 bg-gray-200 dark:bg-white/10"
                 }`}
               />
             ))}
@@ -81,7 +81,7 @@ export default function HowItWorks({ open, onClose }) {
             type="button"
             onClick={handleSkip}
             data-testid="onboarding-dismiss"
-            className="text-xs font-semibold text-gray-500 hover:text-gray-700 cursor-pointer"
+            className="text-xs font-semibold text-gray-500 dark:text-[--huddle-text-sub] hover:text-gray-700 dark:text-[--huddle-text-sub] cursor-pointer"
           >
             Skip
           </button>
@@ -97,7 +97,7 @@ export default function HowItWorks({ open, onClose }) {
           <h2 id="howitworks-title" className="h-section" style={{ fontSize: "1.125rem" }}>
             {step.title}
           </h2>
-          <p className="body-text text-gray-700">{step.body}</p>
+          <p className="body-text text-gray-700 dark:text-[--huddle-text-sub]">{step.body}</p>
         </div>
 
         {/* Controls */}
@@ -106,7 +106,7 @@ export default function HowItWorks({ open, onClose }) {
             <button
               type="button"
               onClick={handleBack}
-              className="flex-1 h-11 rounded-full bg-amber-100 text-gray-900 text-sm font-bold cursor-pointer hover:bg-amber-200 transition"
+              className="flex-1 h-11 rounded-full bg-amber-100 dark:bg-white/10 text-gray-900 dark:text-[--huddle-text] text-sm font-bold cursor-pointer hover:bg-amber-200 dark:hover:bg-white/15 transition"
             >
               Back
             </button>

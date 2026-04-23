@@ -59,13 +59,13 @@ export default function JoinModal({ group, isOpen, onClose }) {
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Modal content */}
-      <div className="relative bg-white rounded-3xl shadow-lg p-6 max-w-md w-80 flex flex-col gap-4 z-10">
-        <h2 className="text-xl font-bold text-gray-800" style={{ fontFamily: "'Jost', sans-serif" }}>
+      <div className="relative bg-white dark:bg-[--huddle-card] rounded-3xl shadow-lg p-6 max-w-md w-80 flex flex-col gap-4 z-10">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-[--huddle-text]" style={{ fontFamily: "'Jost', sans-serif" }}>
           You're in {group.name ?? group.course}!
         </h2>
 
         {(group.meetingTime || group.hours) && (
-          <p className="text-sm text-gray-700" style={{ fontFamily: "'Jost', sans-serif" }}>
+          <p className="text-sm text-gray-700 dark:text-[--huddle-text-sub]" style={{ fontFamily: "'Jost', sans-serif" }}>
             <strong>{group.meetingTime ? "Next Meeting:" : "Hours:"}</strong>{" "}
             {group.meetingTime
               ? `${group.meetingTime}${group.meetingPlace ? ` at ${group.meetingPlace}` : ""}`
@@ -78,7 +78,7 @@ export default function JoinModal({ group, isOpen, onClose }) {
             <p className="text-sm font-semibold" style={{ fontFamily: "'Jost', sans-serif" }}>
               Members:
             </p>
-            <ul className="list-disc list-inside text-sm text-gray-600" style={{ fontFamily: "'Jost', sans-serif" }}>
+            <ul className="list-disc list-inside text-sm text-gray-600 dark:text-[--huddle-text-sub]" style={{ fontFamily: "'Jost', sans-serif" }}>
               {group.members.map((m, i) => (
                 <li key={i}>{m}</li>
               ))}
@@ -94,7 +94,7 @@ export default function JoinModal({ group, isOpen, onClose }) {
           {isGroup && (
             <button
               onClick={handleMessage}
-              className="py-2 rounded-full bg-blue-200 hover:bg-blue-300 text-gray-800 font-semibold cursor-pointer"
+              className="py-2 rounded-full bg-blue-200 hover:bg-blue-300 text-gray-800 dark:text-[--huddle-text] font-semibold cursor-pointer"
               style={{ fontFamily: "'Jost', sans-serif" }}
             >
               Message Group
@@ -103,7 +103,7 @@ export default function JoinModal({ group, isOpen, onClose }) {
           {canCalendar && (
             <button
               onClick={handleCalendar}
-              className="py-2 rounded-full bg-green-200 hover:bg-green-300 text-gray-800 font-semibold cursor-pointer"
+              className="py-2 rounded-full bg-green-200 hover:bg-green-300 text-gray-800 dark:text-[--huddle-text] font-semibold cursor-pointer"
               style={{ fontFamily: "'Jost', sans-serif" }}
             >
               Add to Calendar
@@ -112,14 +112,14 @@ export default function JoinModal({ group, isOpen, onClose }) {
           <button
             onClick={handleLeave}
             disabled={busy}
-            className="py-2 rounded-full bg-red-200 hover:bg-red-300 text-gray-800 font-semibold cursor-pointer disabled:opacity-60"
+            className="py-2 rounded-full bg-red-200 hover:bg-red-300 text-gray-800 dark:text-[--huddle-text] font-semibold cursor-pointer disabled:opacity-60"
             style={{ fontFamily: "'Jost', sans-serif" }}
           >
             {busy ? "Leaving..." : isGroup ? "Leave Group" : "Leave Spot"}
           </button>
           <button
             onClick={onClose}
-            className="py-2 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold cursor-pointer"
+            className="py-2 rounded-full bg-gray-200 dark:bg-white/10 hover:bg-gray-300 text-gray-800 dark:text-[--huddle-text] font-semibold cursor-pointer"
             style={{ fontFamily: "'Jost', sans-serif" }}
           >
             Close

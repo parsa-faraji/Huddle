@@ -50,25 +50,25 @@ export default function StudySessionLog() {
   if (!spot) return <p className="text-center mt-20">Study Spot not found.</p>;
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-white">
+    <div className="flex justify-center items-start min-h-screen bg-white dark:bg-[--huddle-card]">
       <div
         className="w-full max-w-96 h-screen relative
-                   bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
+                   huddle-frame
                    shadow-2xl overflow-y-auto flex flex-col items-center"
       >
-        <h1 className="absolute left-6 top-6 text-5xl font-['Marcellus_SC'] text-black">Huddle</h1>
+        <h1 className="absolute left-6 top-6 text-5xl font-['Marcellus_SC'] text-black dark:text-[--huddle-text]">Huddle</h1>
 
         <form
           onSubmit={handleSubmit}
-          className="mt-28 mb-24 w-80 bg-white rounded-2xl p-6 flex flex-col gap-6 shadow-lg"
+          className="mt-28 mb-24 w-80 bg-white dark:bg-[--huddle-card] rounded-2xl p-6 flex flex-col gap-6 shadow-lg"
         >
           {/* Header */}
-          <h2 className="text-black text-lg font-medium font-['Jost']">
+          <h2 className="text-black dark:text-[--huddle-text] text-lg font-medium font-['Jost']">
             Rate {spot?.name || "Study Spot"}
           </h2>
 
           {/* Rating key */}
-          <p className="text-xs text-gray-600 -mt-0.5">
+          <p className="text-xs text-gray-600 dark:text-[--huddle-text-sub] -mt-0.5">
             1 = Poor / Low &nbsp;&nbsp;|&nbsp;&nbsp; 5 = Excellent / High
           </p>
 
@@ -77,7 +77,7 @@ export default function StudySessionLog() {
               {/* Numbered Ratings */}
               {["productivity", "comfort", "location"].map((field) => (
                 <div key={field}>
-                  <label className="block mb-2 text-sm font-medium text-black font-['Jost']">
+                  <label className="block mb-2 text-sm font-medium text-black dark:text-[--huddle-text] font-['Jost']">
                     {field.charAt(0).toUpperCase() + field.slice(1)}
                   </label>
                   <div className="flex justify-between">
@@ -87,7 +87,7 @@ export default function StudySessionLog() {
                         type="button"
                         onClick={() => handleSelect(field, num)}
                         className={`w-9 h-9 rounded-full font-bold cursor-pointer ${
-                          formData[field] === num ? "bg-amber-300 text-black" : "bg-amber-100 text-black"
+                          formData[field] === num ? "bg-amber-300 text-black dark:text-[--huddle-text]" : "bg-amber-100 dark:bg-white/10 text-black dark:text-[--huddle-text]"
                         }`}
                         style={{ fontFamily: "'Jost', sans-serif" }}
                       >
@@ -100,7 +100,7 @@ export default function StudySessionLog() {
 
               {/* Recommend */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-black font-['Jost']">
+                <label className="block mb-2 text-sm font-medium text-black dark:text-[--huddle-text] font-['Jost']">
                   Recommend?
                 </label>
                 <div className="flex gap-4">
@@ -108,7 +108,7 @@ export default function StudySessionLog() {
                     type="button"
                     onClick={() => handleSelect("recommend", true)}
                     className={`flex-1 py-2 rounded-xl font-bold cursor-pointer ${
-                      formData.recommend === true ? "bg-amber-300 text-black" : "bg-amber-100 text-black"
+                      formData.recommend === true ? "bg-amber-300 text-black dark:text-[--huddle-text]" : "bg-amber-100 dark:bg-white/10 text-black dark:text-[--huddle-text]"
                     }`}
                   >
                     Yes
@@ -117,7 +117,7 @@ export default function StudySessionLog() {
                     type="button"
                     onClick={() => handleSelect("recommend", false)}
                     className={`flex-1 py-2 rounded-xl font-bold cursor-pointer ${
-                      formData.recommend === false ? "bg-amber-300 text-black" : "bg-amber-100 text-black"
+                      formData.recommend === false ? "bg-amber-300 text-black dark:text-[--huddle-text]" : "bg-amber-100 dark:bg-white/10 text-black dark:text-[--huddle-text]"
                     }`}
                   >
                     No
@@ -140,7 +140,7 @@ export default function StudySessionLog() {
             <>
               {/* Overall Rating (Page 2) */}
               <div className="">
-                <label className="block mb-2 text-sm font-medium text-black font-['Jost']">
+                <label className="block mb-2 text-sm font-medium text-black dark:text-[--huddle-text] font-['Jost']">
                   Overall Rating
                 </label>
                 <div className="flex justify-between">
@@ -150,7 +150,7 @@ export default function StudySessionLog() {
                       type="button"
                       onClick={() => handleSelect("overallRating", num)}
                       className={`w-9 h-9 rounded-full font-bold cursor-pointer ${
-                        formData.overallRating === num ? "bg-amber-300 text-black" : "bg-amber-100 text-black"
+                        formData.overallRating === num ? "bg-amber-300 text-black dark:text-[--huddle-text]" : "bg-amber-100 dark:bg-white/10 text-black dark:text-[--huddle-text]"
                       }`}
                       style={{ fontFamily: "'Jost', sans-serif" }}
                     >
@@ -170,12 +170,12 @@ export default function StudySessionLog() {
                 { label: "Crowded", name: "crowded", options: ["Low", "Medium", "High"] },
               ].map((field) => (
                 <div key={field.name} className="flex flex-col gap-1">
-                  <label className="text-black text-sm font-medium font-['Jost']">{field.label}</label>
+                  <label className="text-black dark:text-[--huddle-text] text-sm font-medium font-['Jost']">{field.label}</label>
                   <select
                     name={field.name}
                     value={formData[field.name]}
                     onChange={handleChange}
-                    className="h-10 px-3 rounded-lg outline outline-gray-300 font-['Jost']"
+                    className="h-10 px-3 rounded-lg outline outline-gray-300 dark:outline-[--huddle-border] font-['Jost']"
                   >
                     <option value="">Select {field.label.toLowerCase()}</option>
                     {field.options.map((opt) => (
@@ -189,13 +189,13 @@ export default function StudySessionLog() {
 
               {/* Comments */}
               <div className="flex flex-col gap-1 mt-4">
-                <label className="text-black text-sm font-medium font-['Jost']">Comments (optional)</label>
+                <label className="text-black dark:text-[--huddle-text] text-sm font-medium font-['Jost']">Comments (optional)</label>
                 <textarea
                   name="comments"
                   value={formData.comments}
                   onChange={handleChange}
                   placeholder="Add your thoughts..."
-                  className="h-20 px-3 py-2 rounded-lg outline outline-gray-300 font-['Jost']"
+                  className="h-20 px-3 py-2 rounded-lg outline outline-gray-300 dark:outline-[--huddle-border] font-['Jost']"
                 />
               </div>
 
@@ -204,7 +204,7 @@ export default function StudySessionLog() {
                 <button
                   type="button"
                   onClick={() => setPage(1)}
-                  className="flex-1 h-12 bg-amber-100 rounded-3xl font-['Jost'] cursor-pointer"
+                  className="flex-1 h-12 bg-amber-100 dark:bg-white/10 rounded-3xl font-['Jost'] cursor-pointer"
                 >
                   Back
                 </button>

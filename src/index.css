@@ -66,6 +66,54 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+/* ------------------------------------------------------------------ *
+ * Page frame — the phone-sized radial-gradient canvas every route
+ * uses. Centralized so dark mode flips once, not 10 times.
+ * ------------------------------------------------------------------ */
+.huddle-frame {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--huddle-frame-0) 0%,
+    var(--huddle-frame-1) 81%,
+    var(--huddle-frame-2) 100%
+  );
+}
+
+.huddle-card {
+  background-color: var(--huddle-card);
+  color: var(--huddle-text);
+}
+
+.huddle-card-soft {
+  background-color: var(--huddle-card-soft);
+  color: var(--huddle-text);
+  backdrop-filter: blur(4px);
+}
+
+/* Leaflet popup: switch to dark in dark mode */
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+  background: var(--huddle-card);
+  color: var(--huddle-text);
+}
+.dark .leaflet-container {
+  background: var(--huddle-bg);
+}
+.dark .leaflet-control-attribution {
+  background: rgb(22 22 31 / 0.8) !important;
+  color: var(--huddle-text-sub) !important;
+}
+.dark .leaflet-control-attribution a {
+  color: var(--huddle-gold) !important;
+}
+
+/* Inputs in dark mode — inherit tokens by default */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.dark select,
+.dark textarea {
+  color-scheme: dark;
+}
+
 /* Toast slide-in (applied to individual toast items, not the container) */
 @keyframes huddle-toast-in {
   from { transform: translateY(-8px); opacity: 0; }
@@ -101,6 +149,15 @@ body {
   animation: huddle-skeleton 1.2s ease-in-out infinite;
   border-radius: 16px;
 }
+.dark .huddle-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.04) 0%,
+    rgb(255 255 255 / 0.10) 50%,
+    rgb(255 255 255 / 0.04) 100%
+  );
+  background-size: 200% 100%;
+}
 
 /* ------------------------------------------------------------------ *
  * Typography utilities (design-system level)
@@ -110,31 +167,31 @@ body {
   font-size: 2.75rem;
   line-height: 1.05;
   letter-spacing: -0.01em;
-  color: var(--huddle-ink);
+  color: var(--huddle-text);
 }
 .h-section {
   font-family: "Jost", sans-serif;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--huddle-ink);
+  color: var(--huddle-text);
   letter-spacing: -0.005em;
 }
 .h-card {
   font-family: "Jost", sans-serif;
   font-size: 1rem;
   font-weight: 700;
-  color: var(--huddle-ink);
+  color: var(--huddle-text);
   letter-spacing: -0.005em;
 }
 .body-text {
   font-family: "Jost", sans-serif;
   font-size: 0.875rem;
-  color: var(--huddle-ink);
+  color: var(--huddle-text);
   line-height: 1.45;
 }
 .caption-text {
   font-family: "Jost", sans-serif;
   font-size: 0.75rem;
-  color: var(--huddle-sub);
+  color: var(--huddle-text-sub);
   line-height: 1.4;
 }
