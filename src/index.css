@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Tailwind v4 dark variant — driven by .dark on <html> (ThemeContext).
+ * `@custom-variant` lets us write `dark:` utilities in JSX. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ------------------------------------------------------------------ *
  * Huddle design tokens
  * Centralized palette + type/shadow scale so per-component classes
@@ -16,6 +20,17 @@
   --huddle-navy: #0c2241;
   --huddle-gold: #f9c84a;
 
+  /* Surface tokens — referenced by page shells so dark mode flips them */
+  --huddle-bg: #ffffff;
+  --huddle-frame-0: #ffb000;
+  --huddle-frame-1: #ffdc90;
+  --huddle-frame-2: #ffecc1;
+  --huddle-card: #ffffff;
+  --huddle-card-soft: rgb(255 255 255 / 0.7);
+  --huddle-text: #1a1a2e;
+  --huddle-text-sub: #5c4033;
+  --huddle-border: rgb(0 0 0 / 0.08);
+
   /* Radii */
   --r-card: 20px;
   --r-pill: 9999px;
@@ -25,6 +40,36 @@
   --shadow-md: 0 4px 12px rgb(15 23 42 / 0.08), 0 2px 4px rgb(15 23 42 / 0.04);
   --shadow-lg: 0 12px 32px rgb(15 23 42 / 0.14), 0 4px 10px rgb(15 23 42 / 0.06);
   --shadow-ring: 0 0 0 3px rgb(249 200 74 / 0.55);
+}
+
+/* Dark palette — warm, low-glare. Keeps amber accent, inverts surfaces. */
+.dark {
+  --huddle-bg: #0b0b14;
+  --huddle-frame-0: #2a1f0a;
+  --huddle-frame-1: #1a1406;
+  --huddle-frame-2: #0f0a02;
+  --huddle-card: #16161f;
+  --huddle-card-soft: rgb(22 22 31 / 0.7);
+  --huddle-text: #f4efe5;
+  --huddle-text-sub: #c7b9a3;
+  --huddle-border: rgb(255 255 255 / 0.08);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 14px rgb(0 0 0 / 0.55), 0 2px 4px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 0.7), 0 4px 12px rgb(0 0 0 / 0.4);
+  --shadow-ring: 0 0 0 3px rgb(249 200 74 / 0.7);
+}
+
+html,
+body {
+  background-color: var(--huddle-bg);
+  color: var(--huddle-text);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Toast slide-in (applied to individual toast items, not the container) */
+@keyframes huddle-toast-in {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* ------------------------------------------------------------------ *
