@@ -64,14 +64,14 @@ export default function StudyGroupInfo() {
 
   return (
     <>
-      <div className="flex justify-center items-center min-h-screen bg-white">
+      <div className="flex justify-center items-center min-h-screen bg-white dark:bg-[--huddle-card]">
         <div
           className="w-full max-w-96 h-screen relative
-                     bg-[radial-gradient(ellipse_at_50%_50%,_#FFB000_0%,_#FFDC90_81%,_#FFECC1_100%)]
+                     huddle-frame
                      shadow-2xl overflow-y-auto flex flex-col items-center"
         >
           {/* Huddle header */}
-          <h1 className="absolute left-6 top-6 text-5xl font-['Marcellus_SC'] text-black">
+          <h1 className="absolute left-6 top-6 text-5xl font-['Marcellus_SC'] text-black dark:text-[--huddle-text]">
             Huddle
           </h1>
 
@@ -86,7 +86,7 @@ export default function StudyGroupInfo() {
             {groupRecs.length > 0 && (
               <div className="w-full px-4">
                 <p
-                  className="text-sm text-black font-semibold mb-2"
+                  className="text-sm text-black dark:text-[--huddle-text] font-semibold mb-2"
                   style={{ fontFamily: "'Jost', sans-serif" }}
                 >
                   Recommended spots for this group
@@ -97,11 +97,11 @@ export default function StudyGroupInfo() {
                       key={spot.id}
                       type="button"
                       onClick={() => navigate(`/study-spots/${spot.id}`)}
-                      className="bg-white rounded-2xl p-3 shadow-md text-left cursor-pointer hover:shadow-lg transition"
+                      className="bg-white dark:bg-[--huddle-card] rounded-2xl p-3 shadow-md text-left cursor-pointer hover:shadow-lg transition"
                       style={{ fontFamily: "'Jost', sans-serif" }}
                     >
-                      <p className="font-bold text-black text-sm">{spot.name}</p>
-                      <p className="text-xs text-[#5C4033] mt-0.5">
+                      <p className="font-bold text-black dark:text-[--huddle-text] text-sm">{spot.name}</p>
+                      <p className="text-xs text-[#5C4033] dark:text-[--huddle-text-sub] mt-0.5">
                         {[spot.noiseLevel, spot.lighting, spot.crowded]
                           .filter(Boolean)
                           .join(" · ")}
@@ -121,7 +121,7 @@ export default function StudyGroupInfo() {
                 className="w-full px-4"
                 style={{ fontFamily: "'Jost', sans-serif" }}
               >
-                <div className="bg-white/60 rounded-2xl p-4 text-center text-xs text-[#5C4033]">
+                <div className="bg-white/60 rounded-2xl p-4 text-center text-xs text-[#5C4033] dark:text-[--huddle-text-sub]">
                   Join this group to see messages and coordinate meetings.
                 </div>
               </div>

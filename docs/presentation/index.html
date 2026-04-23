@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huddle — Walkthrough</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" id="theme" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css" />
+  <style>
+    :root {
+      --huddle-amber: #ffb000;
+      --huddle-gold: #f9c84a;
+      --huddle-navy: #0c2241;
+      --huddle-cream: #ffecc1;
+      --huddle-ink: #1a1a2e;
+    }
+    .reveal {
+      font-family: 'Jost', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Marcellus SC', 'Marcellus', serif;
+      text-transform: none;
+      letter-spacing: -0.01em;
+    }
+    .reveal .huddle-title {
+      color: var(--huddle-gold);
+      font-size: 4rem;
+    }
+    .reveal .huddle-subtitle {
+      color: var(--huddle-cream);
+      font-weight: 500;
+    }
+    .reveal section.intro {
+      background: radial-gradient(ellipse at 50% 50%, var(--huddle-amber) 0%, #d4820c 70%, #6b3c03 100%);
+      color: #1a1a2e;
+      border-radius: 16px;
+    }
+    .reveal section.intro h1,
+    .reveal section.intro h2,
+    .reveal section.intro h3,
+    .reveal section.intro p,
+    .reveal section.intro li {
+      color: #1a1a2e;
+    }
+    .reveal section.frontend h2 {
+      color: #7dd3fc;
+    }
+    .reveal section.backend h2 {
+      color: #f9a8d4;
+    }
+    .reveal .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .reveal .card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+    }
+    .reveal section.intro .card {
+      background: rgba(26, 26, 46, 0.08);
+      border-color: rgba(26, 26, 46, 0.12);
+    }
+    .reveal .chip {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(249, 200, 74, 0.15);
+      color: var(--huddle-gold);
+      font-size: 0.75em;
+      font-weight: 600;
+      margin: 2px 4px 2px 0;
+    }
+    .reveal section.intro .chip {
+      background: rgba(26, 26, 46, 0.12);
+      color: var(--huddle-navy);
+    }
+    .reveal pre {
+      background: #0b0f19;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .reveal pre code {
+      padding: 1rem 1.25rem;
+      font-size: 0.75em;
+      line-height: 1.5;
+    }
+    .reveal ul li {
+      margin: 0.4em 0;
+      line-height: 1.5;
+    }
+    .reveal .muted {
+      color: #94a3b8;
+    }
+    .reveal .section-label {
+      display: inline-block;
+      padding: 2px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #f9c84a;
+      font-size: 0.7em;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .reveal .frontend .section-label { color: #7dd3fc; background: rgba(125, 211, 252, 0.12); }
+    .reveal .backend .section-label { color: #f9a8d4; background: rgba(249, 168, 212, 0.12); }
+    .reveal figure { margin: 0; }
+    .reveal figure video, .reveal figure img { border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.4); max-width: 100%; }
+    .reveal figcaption { font-size: 0.7em; color: #94a3b8; margin-top: 0.5rem; }
+    .reveal .kicker {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7em;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--huddle-gold);
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ========== INTRO ========== -->
+      <section class="intro">
+        <h1 class="huddle-title" style="margin-bottom: 0.25em;">Huddle</h1>
+        <p class="huddle-subtitle" style="font-size: 1.2em; margin: 0;">Find a study spot. Find your people.</p>
+        <p style="margin-top: 2em; font-size: 0.8em; opacity: 0.8;">A campus study-spot discovery, rating, and group-matching app for students.</p>
+      </section>
+
+      <section class="intro">
+        <span class="section-label">The problem</span>
+        <h2>Students don't know where to study.</h2>
+        <div class="two-col" style="margin-top: 1.5em;">
+          <div class="card">
+            <h3 style="font-size: 1.1em; margin: 0 0 0.4em 0;">Too quiet. Too loud.</h3>
+            <p style="font-size: 0.75em;">Moffitt is packed at 8pm. The stacks are silent. Which floor has outlets? Who knows?</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 1.1em; margin: 0 0 0.4em 0;">Nobody to study with.</h3>
+            <p style="font-size: 0.75em;">You could DM 30 classmates on GroupMe and hope one is free. Or you could match with people already meeting for CS61A.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro">
+        <span class="section-label">The solution</span>
+        <h2>One app, three loops.</h2>
+        <div class="two-col" style="grid-template-columns: 1fr 1fr 1fr; font-size: 0.85em; margin-top: 1.5em;">
+          <div class="card">
+            <div style="font-size: 2em;">📍</div>
+            <h3 style="font-size: 1em;">Discover</h3>
+            <p style="font-size: 0.85em;">List + map of campus spots with live crowd counts and community ratings.</p>
+          </div>
+          <div class="card">
+            <div style="font-size: 2em;">✅</div>
+            <h3 style="font-size: 1em;">Check in</h3>
+            <p style="font-size: 0.85em;">"I'm here now" for 15 min. Others see the live count — quiet floors stay honest.</p>
+          </div>
+          <div class="card">
+            <div style="font-size: 2em;">💬</div>
+            <h3 style="font-size: 1em;">Huddle up</h3>
+            <p style="font-size: 0.85em;">Join or create a study group for a course. In-app chat, iCal export, email blast.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro">
+        <span class="section-label">Demo</span>
+        <h2 style="margin-bottom: 0.5em;">See it in action</h2>
+        <figure>
+          <video src="../demo/huddle-demo.webm" controls autoplay muted loop style="max-height: 520px;"></video>
+          <figcaption>Signup → favorite → search → dark mode → check in → groups → sign out. Recorded with Playwright.</figcaption>
+        </figure>
+      </section>
+
+      <section class="intro">
+        <span class="section-label">At a glance</span>
+        <h2>What's shipped</h2>
+        <ul style="font-size: 0.8em;">
+          <li>15 seeded UC Berkeley study spots with location + hours + noise/outlets/lighting metadata</li>
+          <li>Student-only signup gate (<code>.edu</code>, <code>.ac.uk</code>, <code>.edu.au</code>, …)</li>
+          <li>Ratings across 9 axes + comments, per-spot community averages</li>
+          <li>Live crowd check-ins (15-min TTL)</li>
+          <li>Study groups with member list, meeting info, iCal export, in-app chat</li>
+          <li>Personalized spot recommendations per user and per group</li>
+          <li>Search + sort + filters, favorites, dark mode, onboarding tour</li>
+          <li>28 Playwright E2E tests — all green</li>
+        </ul>
+      </section>
+
+      <!-- ========== FRONTEND ========== -->
+      <section class="frontend">
+        <span class="section-label">Part 2</span>
+        <h2 style="margin: 0;">Frontend</h2>
+        <p class="muted" style="margin-top: 0.5em;">React 19 · Vite 7 · Tailwind 4 · Firebase SDK</p>
+      </section>
+
+      <section class="frontend">
+        <span class="section-label">Architecture</span>
+        <h2>App shell</h2>
+        <div class="two-col">
+          <div class="card">
+            <h3 style="font-size: 1em;">Route layers</h3>
+            <ul style="font-size: 0.8em;">
+              <li><code>AuthLayout</code> — login/signup (no nav)</li>
+              <li><code>RequireAuth</code> + <code>AppLayout</code> — protected routes with bottom nav</li>
+              <li><code>*</code> — 404 page</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 1em;">State providers</h3>
+            <ul style="font-size: 0.8em;">
+              <li><code>AuthProvider</code> — Firebase Auth user</li>
+              <li><code>AppProvider</code> — subscribed Firestore data (spots, groups, ratings, check-ins)</li>
+              <li><code>ThemeProvider</code> — light / dark / auto</li>
+              <li><code>ToastProvider</code> — global notifications</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="frontend">
+        <span class="section-label">UX</span>
+        <h2>Mobile-first phone frame</h2>
+        <div class="two-col">
+          <div>
+            <ul style="font-size: 0.85em;">
+              <li>Every route uses a <code>max-w-96</code> phone-frame shell on a gradient background</li>
+              <li>Radial amber gradient (light) flips to warm-dark tokens</li>
+              <li>Bottom nav is a glass-pill with <code>lucide-react</code> icons and safe-area padding</li>
+              <li>Skeleton shimmers on data load, illustrated empty states with CTAs</li>
+            </ul>
+          </div>
+          <pre><code class="language-css">.huddle-frame {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--huddle-frame-0) 0%,
+    var(--huddle-frame-1) 81%,
+    var(--huddle-frame-2) 100%
+  );
+}
+.dark {
+  --huddle-frame-0: #2a1f0a;
+  --huddle-frame-1: #1a1406;
+  --huddle-frame-2: #0f0a02;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="frontend">
+        <span class="section-label">Theming</span>
+        <h2>Dark mode without duplication</h2>
+        <pre><code class="language-jsx">// Tailwind v4 @custom-variant
+@custom-variant dark (&amp;:where(.dark, .dark *));
+
+// ThemeContext flips `html.dark`, persists to localStorage,
+// mirrors to users/{uid}.themePreference when signed in.
+const { pref, setPref, resolved } = useTheme();
+// pref: "light" | "dark" | "auto"</code></pre>
+        <p style="font-size: 0.8em; color: #94a3b8; margin-top: 1em;">
+          Surface tokens (<code>--huddle-card</code>, <code>--huddle-text</code>, <code>--huddle-frame-*</code>) flip inside <code>.dark</code>.
+          Components just use <code>dark:bg-[--huddle-card]</code> — one rule per token, everything follows.
+        </p>
+      </section>
+
+      <section class="frontend">
+        <span class="section-label">Map</span>
+        <h2>Leaflet + OpenStreetMap</h2>
+        <div class="two-col">
+          <div>
+            <ul style="font-size: 0.85em;">
+              <li><code>react-leaflet</code> lazy-loaded via <code>React.lazy</code> — doesn't bloat initial bundle</li>
+              <li>Markers only for spots with <code>lat/lng</code>; popup includes live check-in count + View CTA</li>
+              <li>Dark mode: popup + attribution + container all override to warm-dark tokens via CSS</li>
+            </ul>
+          </div>
+          <pre><code class="language-jsx">const MapView = lazy(() => import("../../components/MapView"));
+
+&lt;Suspense fallback={&lt;MapSkeleton /&gt;}&gt;
+  &lt;MapView spots={filteredSpots} /&gt;
+&lt;/Suspense&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="frontend">
+        <span class="section-label">Data flow</span>
+        <h2>One subscription, zero REST</h2>
+        <pre><code class="language-ts">// src/context/AppContext.jsx
+useEffect(() =&gt; {
+  if (!user) return resetState();
+  const unsubs = [
+    subscribeSpots(setSpots),
+    subscribeGroups(setGroups),
+    subscribeUserDoc(user.uid, setUserDoc),
+    subscribeUserSessions(user.uid, setSessions),
+    subscribeActiveCheckins(setCheckins),
+  ];
+  return () =&gt; unsubs.forEach(u =&gt; u());
+}, [user]);</code></pre>
+        <p style="font-size: 0.75em; color: #94a3b8;">
+          Firestore <code>onSnapshot</code> listeners push updates in real time. No polling, no manual refresh. Unsubscribe on sign-out or unmount.
+        </p>
+      </section>
+
+      <section class="frontend">
+        <span class="section-label">Quality</span>
+        <h2>Testing with Playwright</h2>
+        <div class="two-col">
+          <div class="card">
+            <h3 style="font-size: 1em; color: #7dd3fc;">8 spec files · 28 tests</h3>
+            <ul style="font-size: 0.75em; margin-top: 0.4em;">
+              <li>auth · signup-gate · discovery</li>
+              <li>flows (join/rate/prefs/group create)</li>
+              <li>checkins · group-chat · onboarding</li>
+              <li>favorites · theme · search-and-sort</li>
+              <li>not-found · a11y-smoke</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 1em; color: #7dd3fc;">CI-grade</h3>
+            <ul style="font-size: 0.75em; margin-top: 0.4em;">
+              <li>Real Firebase Auth + Firestore (not mocked)</li>
+              <li>Tests create their own unique <code>.edu</code> accounts</li>
+              <li>Video + trace on failure for debugging</li>
+              <li>Demo reel is a dedicated Playwright script → <code>npm run demo:record</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== BACKEND ========== -->
+      <section class="backend">
+        <span class="section-label">Part 3</span>
+        <h2 style="margin: 0;">Backend</h2>
+        <p class="muted" style="margin-top: 0.5em;">Firebase · Node + Express · Vercel Functions</p>
+      </section>
+
+      <section class="backend">
+        <span class="section-label">Storage</span>
+        <h2>Firestore collections</h2>
+        <div class="two-col">
+          <div>
+            <ul style="font-size: 0.8em;">
+              <li><code>users/{uid}</code> — profile, prefs, joined spots/groups, favorites, theme</li>
+              <li><code>spots/{id}</code> — metadata, lat/lng, <code>ratingSum</code>/<code>ratingCount</code></li>
+              <li><code>groups/{id}</code> — course, owner, member list, meeting info</li>
+              <li><code>groups/{id}/messages/{id}</code> — in-group chat, 500-char cap</li>
+              <li><code>ratings/{id}</code> — per-user per-spot rating, 9 axes</li>
+              <li><code>checkins/{id}</code> — 15-min TTL presence, expiresAt Timestamp</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 0.95em; color: #f9a8d4;">Why Firestore?</h3>
+            <ul style="font-size: 0.75em;">
+              <li>Real-time <code>onSnapshot</code> subscriptions — crowd counts + chat are live with no extra infrastructure</li>
+              <li>Hosted auth integrates with the same SDK the frontend already uses</li>
+              <li>Security rules let us ship without a backend at all for most flows</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="backend">
+        <span class="section-label">Security</span>
+        <h2>Rules, not trust</h2>
+        <pre><code class="language-ts">// firestore.rules
+match /groups/{groupId} {
+  allow read: if isSignedIn();
+  allow update: if isSignedIn() &amp;&amp; (
+    (resource.data.ownerId == request.auth.uid)
+    || request.resource.data.diff(resource.data)
+         .affectedKeys().hasOnly(['memberIds', 'members'])
+  );
+
+  match /messages/{messageId} {
+    function isMember() {
+      return request.auth.uid in
+        get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds;
+    }
+    allow read: if isMember();
+    allow create: if isMember()
+      &amp;&amp; request.resource.data.userId == request.auth.uid
+      &amp;&amp; request.resource.data.body.size() &lt;= 500;
+  }
+}</code></pre>
+      </section>
+
+      <section class="backend">
+        <span class="section-label">Auth</span>
+        <h2>Student gate</h2>
+        <div class="two-col">
+          <div>
+            <ul style="font-size: 0.85em;">
+              <li>Signup only accepts academic suffixes — <code>.edu</code>, <code>.ac.uk</code>, <code>.edu.au</code>, <code>.ac.jp</code>, etc.</li>
+              <li>Password reset via Firebase Auth built-in email</li>
+              <li>Protected routes redirect unauthenticated users to <code>/</code></li>
+              <li>Verified-student badge on Profile with school domain</li>
+            </ul>
+          </div>
+          <pre><code class="language-ts">// src/services/studentEmail.ts
+const ACADEMIC = [
+  '.edu', '.ac.uk', '.ac.jp', '.edu.au',
+  '.edu.cn', '.ac.in', '.edu.sg', …
+];
+export function isStudentEmail(email) {
+  const lower = email.toLowerCase();
+  return ACADEMIC.some(suf =&gt; lower.endsWith(suf));
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="backend">
+        <span class="section-label">Node backend</span>
+        <h2>Express for what Firestore can't do</h2>
+        <div class="two-col">
+          <div>
+            <ul style="font-size: 0.85em;">
+              <li><code>Backend/server.js</code> — Express app, Firebase Admin SDK</li>
+              <li><code>verifyToken</code> middleware — validates Firebase ID tokens</li>
+              <li>Endpoints for server-validated writes (profile updates, email blasts)</li>
+              <li>Same code runs on Render (persistent) or wraps to Vercel Functions via <code>serverless-http</code></li>
+            </ul>
+          </div>
+          <pre><code class="language-js">// api/index.js — Vercel Function wrapper
+import serverless from 'serverless-http';
+import app from '../Backend/server.js';
+export default serverless(app);
+
+// vercel.json routes /api/* here and
+// serves the Vite SPA for everything else.</code></pre>
+        </div>
+      </section>
+
+      <section class="backend">
+        <span class="section-label">Ops</span>
+        <h2>Seeding + deployment</h2>
+        <pre><code class="language-bash"># One-time — writes 15 UC Berkeley spots + 2 demo groups + ratings + chat
+# Idempotent: re-run to backfill new fields on existing docs.
+node scripts/seed-firestore.cjs
+
+# Rules + indexes ship together
+firebase deploy --only firestore:rules,firestore:indexes \
+  --project huddle-5ae58
+
+# Frontend goes to Vercel on every push to main
+git push origin main
+# → https://huddle-mu-blue.vercel.app</code></pre>
+      </section>
+
+      <section class="backend">
+        <span class="section-label">Live</span>
+        <h2>Crowd presence</h2>
+        <pre><code class="language-ts">// src/services/checkins.ts
+export async function checkIn(uid, spotId) {
+  await addDoc(collection(db, 'checkins'), {
+    userId: uid,
+    spotId,
+    createdAt: serverTimestamp(),
+    expiresAt: Timestamp.fromMillis(Date.now() + 15 * 60_000),
+  });
+}
+
+export function subscribeActiveCheckins(cb) {
+  const q = query(collection(db, 'checkins'),
+    where('expiresAt', '&gt;', Timestamp.now()));
+  return onSnapshot(q, snap =&gt; cb(snap.docs.map(d =&gt; ({ id: d.id, ...d.data() }))));
+}</code></pre>
+        <p style="font-size: 0.75em; color: #94a3b8;">
+          Rules require each check-in to own its <code>userId</code> and include an <code>expiresAt Timestamp</code>. A one-minute client tick drops expired ones from the count even before Firestore pushes a new snapshot.
+        </p>
+      </section>
+
+      <!-- ========== CLOSE ========== -->
+      <section class="intro">
+        <h2 style="margin: 0;">Thank you.</h2>
+        <p style="margin-top: 1em;">Huddle is live at <strong>huddle-mu-blue.vercel.app</strong></p>
+        <div style="margin-top: 2em;">
+          <span class="chip">React 19</span>
+          <span class="chip">Vite 7</span>
+          <span class="chip">Tailwind 4</span>
+          <span class="chip">Firebase</span>
+          <span class="chip">Leaflet</span>
+          <span class="chip">Playwright</span>
+          <span class="chip">Vercel</span>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      slideNumber: 'c/t',
+      plugins: [RevealHighlight, RevealNotes],
+    });
+  </script>
+</body>
+</html>

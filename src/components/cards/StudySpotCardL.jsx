@@ -7,8 +7,8 @@ const InfoRow = ({ icon, label, value }) => (
   <div className="flex gap-2 items-start">
     <span className="text-[#2C4A7C] mt-0.5 text-lg">{icon}</span>
     <div>
-      <p className="font-semibold text-[#1a1a2e] text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>{label}</p>
-      <p className="text-gray-600 text-xs leading-snug" style={{ fontFamily: "'Jost', sans-serif" }}>{value}</p>
+      <p className="font-semibold text-[#1a1a2e] dark:text-[--huddle-text] text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>{label}</p>
+      <p className="text-gray-600 dark:text-[--huddle-text-sub] text-xs leading-snug" style={{ fontFamily: "'Jost', sans-serif" }}>{value}</p>
     </div>
   </div>
 );
@@ -52,7 +52,7 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
     <>
       <div className="flex justify-center w-full p-4">
         <div
-          className="bg-white rounded-3xl p-5 max-w-md w-full flex flex-col gap-3"
+          className="bg-white dark:bg-[--huddle-card] rounded-3xl p-5 max-w-md w-full flex flex-col gap-3"
           style={{ boxShadow: "var(--shadow-lg)" }}
         >
 
@@ -78,31 +78,31 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
           <div className="flex flex-wrap gap-2 mt-2">
             {data.noiseLevel && (
               <div className="flex flex-col items-center">
-                <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Noise</span>
+                <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Noise</span>
                 <Badge label={data.noiseLevel} color={noiseBadgeColor(data.noiseLevel)} />
               </div>
             )}
             {data.crowded && (
               <div className="flex flex-col items-center">
-                <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Crowd</span>
+                <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Crowd</span>
                 <Badge label={data.crowded} color={crowdBadgeColor(data.crowded)} />
               </div>
             )}
             {data.open !== undefined && (
               <div className="flex flex-col items-center">
-                <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Status</span>
+                <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Status</span>
                 <Badge label={data.open ? "Open" : "Closed"} color={openBadgeColor(data.open)} />
               </div>
             )}
             {rating !== null && (
               <div className="flex flex-col items-center">
-                <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Rating</span>
+                <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Rating</span>
                 <Badge label={rating} color={ratingBadgeColor(Number(rating))} />
               </div>
             )}
             {hereNow > 0 && (
               <div className="flex flex-col items-center">
-                <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Here now</span>
+                <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Here now</span>
                 <Badge label={`${hereNow} live`} color="green" />
               </div>
             )}
@@ -133,7 +133,7 @@ export default function StudySpotCardL({ data, buttonText = "Join", onJoin, onCo
                   state: { spotData: data },
                 })
               }
-              className="flex-1 bg-amber-300 hover:bg-amber-400 active:bg-amber-500 transition-colors text-gray-900 font-bold text-sm rounded-2xl cursor-pointer py-2.5"
+              className="flex-1 bg-amber-300 hover:bg-amber-400 active:bg-amber-500 transition-colors text-gray-900 dark:text-[--huddle-text] font-bold text-sm rounded-2xl cursor-pointer py-2.5"
               style={{ fontFamily: "'Jost', sans-serif" }}
             >
               Rate

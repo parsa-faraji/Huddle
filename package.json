@@ -11,12 +11,16 @@
     "lint": "eslint .",
     "backend:install": "cd Backend && npm install",
     "backend:dev": "cd Backend && node server.js",
-    "start:all": "echo 'Start frontend and backend in separate terminals:\n  Terminal 1: npm run dev\n  Terminal 2: npm run backend:dev'"
+    "start:all": "echo 'Start frontend and backend in separate terminals:\n  Terminal 1: npm run dev\n  Terminal 2: npm run backend:dev'",
+    "test:e2e": "playwright test",
+    "demo:record": "node scripts/record-demo.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
+    "clsx": "^2.1.1",
     "firebase": "^10.8.0",
     "leaflet": "^1.9.4",
+    "lucide-react": "^1.8.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-leaflet": "^5.0.0",

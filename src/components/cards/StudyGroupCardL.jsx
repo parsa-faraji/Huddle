@@ -6,8 +6,8 @@ const InfoRow = ({ icon, label, value }) => (
   <div className="flex gap-2 items-start">
     <span className="text-[#2C4A7C] mt-0.5 text-lg">{icon}</span>
     <div>
-      <p className="font-semibold text-[#1a1a2e] text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>{label}</p>
-      <p className="text-gray-600 text-xs leading-snug" style={{ fontFamily: "'Jost', sans-serif" }}>{value}</p>
+      <p className="font-semibold text-[#1a1a2e] dark:text-[--huddle-text] text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>{label}</p>
+      <p className="text-gray-600 dark:text-[--huddle-text-sub] text-xs leading-snug" style={{ fontFamily: "'Jost', sans-serif" }}>{value}</p>
     </div>
   </div>
 );
@@ -55,7 +55,7 @@ export default function ExpandedCard({ data, buttonText = "Join", onJoin }) {
     <>
       <div className="flex justify-center w-full p-4">
         <div
-          className="bg-white rounded-3xl p-5 max-w-md w-full flex flex-col gap-3"
+          className="bg-white dark:bg-[--huddle-card] rounded-3xl p-5 max-w-md w-full flex flex-col gap-3"
           style={{ boxShadow: "var(--shadow-lg)" }}
         >
 
@@ -82,10 +82,10 @@ export default function ExpandedCard({ data, buttonText = "Join", onJoin }) {
 
           {/* BADGES */}
           <div className="flex flex-wrap gap-2">
-            {data?.noiseLevel && <div className="flex flex-col items-center"><span className="text-gray-500 text-[0.65rem]">Noise Level</span><Badge label={data.noiseLevel} color={noiseBadgeColor(data.noiseLevel)} /></div>}
-            {data?.pace && <div className="flex flex-col items-center"><span className="text-gray-500 text-[0.65rem]">Pace</span><Badge label={data.pace} color={paceBadgeColor(data.pace)} /></div>}
-            {data?.groupSize && <div className="flex flex-col items-center"><span className="text-gray-500 text-[0.65rem]">Size</span><Badge label={data.groupSize} color={crowdBadgeColor(data.groupSize)} /></div>}
-            {data?.groupType && <div className="flex flex-col items-center"><span className="text-gray-500 text-[0.65rem]">Type</span><Badge label={data.groupType} color={groupBadgeColor(data.groupType)} /></div>}
+            {data?.noiseLevel && <div className="flex flex-col items-center"><span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]">Noise Level</span><Badge label={data.noiseLevel} color={noiseBadgeColor(data.noiseLevel)} /></div>}
+            {data?.pace && <div className="flex flex-col items-center"><span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]">Pace</span><Badge label={data.pace} color={paceBadgeColor(data.pace)} /></div>}
+            {data?.groupSize && <div className="flex flex-col items-center"><span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]">Size</span><Badge label={data.groupSize} color={crowdBadgeColor(data.groupSize)} /></div>}
+            {data?.groupType && <div className="flex flex-col items-center"><span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]">Type</span><Badge label={data.groupType} color={groupBadgeColor(data.groupType)} /></div>}
           </div>
 
           {/* INFO ROWS */}
@@ -100,7 +100,7 @@ export default function ExpandedCard({ data, buttonText = "Join", onJoin }) {
           {/* JOIN BUTTON */}
           <button
             onClick={handleJoinClick}
-            className="bg-amber-300 hover:bg-amber-400 active:bg-amber-500 transition-colors text-gray-900 font-bold text-sm rounded-2xl py-2.5 w-full self-center cursor-pointer mt-3"
+            className="bg-amber-300 hover:bg-amber-400 active:bg-amber-500 transition-colors text-gray-900 dark:text-[--huddle-text] font-bold text-sm rounded-2xl py-2.5 w-full self-center cursor-pointer mt-3"
           >
             {buttonText}
           </button>

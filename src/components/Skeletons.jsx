@@ -1,7 +1,7 @@
 export function SkeletonCard() {
   return (
     <div
-      className="bg-white/80 rounded-[20px] p-5 w-full max-w-sm flex flex-col gap-3"
+      className="bg-white/80 dark:bg-white/5 rounded-[20px] p-5 w-full max-w-sm flex flex-col gap-3"
       style={{ boxShadow: "var(--shadow-sm)" }}
       aria-hidden="true"
     >
@@ -30,7 +30,7 @@ export function SkeletonCard() {
 export function SkeletonGroupCard() {
   return (
     <div
-      className="bg-white/80 rounded-[20px] p-5 w-full max-w-sm flex flex-col gap-3"
+      className="bg-white/80 dark:bg-white/5 rounded-[20px] p-5 w-full max-w-sm flex flex-col gap-3"
       style={{ boxShadow: "var(--shadow-sm)" }}
       aria-hidden="true"
     >
@@ -64,10 +64,17 @@ export function EmptyState({ icon = "🔎", title, body, action }) {
       <div className="text-4xl" aria-hidden="true">
         {icon}
       </div>
-      <p className="h-section" style={{ fontSize: "1rem" }}>
+      <p
+        className="h-section dark:!text-[--huddle-text]"
+        style={{ fontSize: "1rem" }}
+      >
         {title}
       </p>
-      {body && <p className="caption-text max-w-[240px]">{body}</p>}
+      {body && (
+        <p className="caption-text dark:!text-[--huddle-text-sub] max-w-[240px]">
+          {body}
+        </p>
+      )}
       {action}
     </div>
   );

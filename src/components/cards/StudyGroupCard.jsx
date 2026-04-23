@@ -4,10 +4,10 @@ const InfoRow = ({ icon, label, value }) => (
   <div className="flex gap-2 items-start">
     <span className="text-[#2C4A7C] mt-0.5 text-lg">{icon}</span>
     <div>
-      <p className="font-semibold text-[#1a1a2e] text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>
+      <p className="font-semibold text-[#1a1a2e] dark:text-[--huddle-text] text-xs" style={{ fontFamily: "'Jost', sans-serif" }}>
         {label}
       </p>
-      <p className="text-gray-600 text-xs leading-snug" style={{ fontFamily: "'Jost', sans-serif" }}>
+      <p className="text-gray-600 dark:text-[--huddle-text-sub] text-xs leading-snug" style={{ fontFamily: "'Jost', sans-serif" }}>
         {value}
       </p>
     </div>
@@ -44,7 +44,7 @@ export default function Card({ data, buttonText = "View" }) {
   return (
     <div className="flex justify-center w-full">
       <div
-        className="bg-white rounded-3xl p-5 w-full max-w-sm flex flex-col gap-3"
+        className="bg-white dark:bg-[--huddle-card] rounded-3xl p-5 w-full max-w-sm flex flex-col gap-3"
         style={{ boxShadow: "var(--shadow-md)" }}
       >
 
@@ -63,18 +63,18 @@ export default function Card({ data, buttonText = "View" }) {
         <div className="flex flex-wrap gap-2">
           {data.noiseLevel && (
             <div className="flex flex-col items-center">
-              <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Noise Level</span>
+              <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Noise Level</span>
               <Badge label={data.noiseLevel} color={noiseBadgeColor(data.noiseLevel)} />
             </div>
           )}
           {data.pace && (
             <div className="flex flex-col items-center">
-              <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Pace</span>
+              <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Pace</span>
               <Badge label={data.pace} color={paceBadgeColor(data.pace)} />
             </div>
           )}
           {data?.groupSize && <div className="flex flex-col items-center">
-              <span className="text-gray-500 text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Size</span>
+              <span className="text-gray-500 dark:text-[--huddle-text-sub] text-[0.65rem]" style={{ fontFamily: "'Jost', sans-serif" }}>Size</span>
               <Badge label={data.groupSize} color={crowdBadgeColor(data.groupSize)} /></div>}
         </div>
 
@@ -94,7 +94,7 @@ export default function Card({ data, buttonText = "View" }) {
         {/* BUTTON */}
         <button
           onClick={() => data.id && navigate(`/study-groups/${data.id}`)}
-          className="bg-amber-300 hover:bg-amber-400 active:bg-amber-500 cursor-pointer transition-colors text-gray-900 font-bold text-sm rounded-2xl py-2.5 w-full mt-1"
+          className="bg-amber-300 hover:bg-amber-400 active:bg-amber-500 cursor-pointer transition-colors text-gray-900 dark:text-[--huddle-text] font-bold text-sm rounded-2xl py-2.5 w-full mt-1"
           style={{ fontFamily: "'Jost', sans-serif" }}
         >
           {buttonText}

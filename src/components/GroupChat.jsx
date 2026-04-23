@@ -59,13 +59,13 @@ export default function GroupChat({ groupId }) {
 
   return (
     <div
-      className="w-full bg-white rounded-2xl shadow-md p-4 flex flex-col gap-3"
+      className="w-full bg-white dark:bg-[--huddle-card] rounded-2xl shadow-md p-4 flex flex-col gap-3"
       style={{ fontFamily: "'Jost', sans-serif" }}
       data-testid="group-chat"
     >
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-gray-800">Group chat</p>
-        <span className="text-[0.65rem] text-gray-500">Members only</span>
+        <p className="text-sm font-semibold text-gray-800 dark:text-[--huddle-text]">Group chat</p>
+        <span className="text-[0.65rem] text-gray-500 dark:text-[--huddle-text-sub]">Members only</span>
       </div>
 
       <div
@@ -74,9 +74,9 @@ export default function GroupChat({ groupId }) {
         data-testid="group-chat-messages"
       >
         {!loaded ? (
-          <p className="text-xs text-gray-500 text-center py-6">Loading chat…</p>
+          <p className="text-xs text-gray-500 dark:text-[--huddle-text-sub] text-center py-6">Loading chat…</p>
         ) : messages.length === 0 ? (
-          <p className="text-xs text-gray-500 text-center py-6">
+          <p className="text-xs text-gray-500 dark:text-[--huddle-text-sub] text-center py-6">
             No messages yet. Say hi to kick things off.
           </p>
         ) : (
@@ -87,7 +87,7 @@ export default function GroupChat({ groupId }) {
                 key={m.id}
                 className={`flex flex-col ${mine ? "items-end" : "items-start"}`}
               >
-                <div className="flex items-baseline gap-2 text-[0.65rem] text-gray-500">
+                <div className="flex items-baseline gap-2 text-[0.65rem] text-gray-500 dark:text-[--huddle-text-sub]">
                   <span className="font-semibold">
                     {mine ? "You" : m.displayName || "Member"}
                   </span>
@@ -95,7 +95,7 @@ export default function GroupChat({ groupId }) {
                 </div>
                 <div
                   className={`mt-0.5 rounded-2xl px-3 py-1.5 text-sm max-w-[85%] break-words ${
-                    mine ? "bg-sky-950 text-white" : "bg-white text-gray-800 shadow-sm"
+                    mine ? "bg-sky-950 text-white" : "bg-white dark:bg-[--huddle-card] text-gray-800 dark:text-[--huddle-text] shadow-sm"
                   }`}
                 >
                   {m.body}
@@ -116,7 +116,7 @@ export default function GroupChat({ groupId }) {
             maxLength={MAX_MESSAGE_LENGTH}
             aria-label="Message"
             data-testid="group-chat-input"
-            className="flex-1 h-10 px-3 rounded-full border border-gray-300 text-sm outline-none focus:ring-2 focus:ring-amber-200"
+            className="flex-1 h-10 px-3 rounded-full border border-gray-300 dark:border-[--huddle-border] text-sm outline-none focus:ring-2 focus:ring-amber-200"
           />
           <button
             type="submit"

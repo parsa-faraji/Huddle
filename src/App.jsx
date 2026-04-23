@@ -15,6 +15,7 @@ import StudyGroupInfo from "./pages/study-groups/StudyGroupInfo";
 import StudyGroupCreate from "./pages/study-groups/StudyGroupCreate";
 import Insights from "./pages/Insights";
 import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
@@ -46,6 +47,9 @@ function App() {
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
+
+      {/* 404 — unauthenticated users hitting a bogus URL still get the page */}
+      <Route path="*" element={<NotFound />} />
 
     </Routes>
   );
