@@ -70,7 +70,7 @@ export default function Profile() {
     try {
       await updatePreferences(prefs);
       setStatus("Preferences saved.");
-      toast.success("Preferences saved");
+      toast.success("Saved ✓");
     } catch (err) {
       const msg = err?.message || "Could not save preferences.";
       setStatus(msg);
